@@ -1,0 +1,927 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ru">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>tecplot_lib &#8212; Документация tecplot_lib </title>
+    
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/translations.js"></script>
+    <link rel="index" title="Алфавитный указатель" href="../genindex.html" />
+    <link rel="search" title="Поиск" href="../search.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Навигация</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="Алфавитный указатель"
+             accesskey="I">указатель</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Содержание модулей Python"
+             >модули</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Документация tecplot_lib </a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Код модуля</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Исходный код tecplot_lib</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">typing</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">enum</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="n">__version__</span> <span class="o">=</span> <span class="s1">&#39;0.1&#39;</span>
+<span class="n">__author__</span> <span class="o">=</span> <span class="s1">&#39;Alexander Zhigalkin&#39;</span>
+
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%(msg)s</span><span class="s1">&#39;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="Point"><a class="viewcode-back" href="../API reference.html#tecplot_lib.Point">[документация]</a><span class="k">class</span> <span class="nc">Point</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">x</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">y</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="n">z</span></div>
+
+
+<div class="viewcode-block" id="PolyLine"><a class="viewcode-back" href="../API reference.html#tecplot_lib.PolyLine">[документация]</a><span class="k">class</span> <span class="nc">PolyLine</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nodes</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Point</span><span class="p">],</span> <span class="n">numpoints</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span> <span class="o">=</span> <span class="n">nodes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">numpoints</span> <span class="o">=</span> <span class="n">numpoints</span></div>
+
+
+<div class="viewcode-block" id="wrap_macro"><a class="viewcode-back" href="../API reference.html#tecplot_lib.wrap_macro">[документация]</a><span class="k">def</span> <span class="nf">wrap_macro</span><span class="p">(</span><span class="n">macro_body</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Добавляет обязательные команды к конек и начало макроса</span>
+<span class="sd">    :param macro_body: str</span>
+<span class="sd">    :return: str</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="s2">&quot;#!MC 1410</span><span class="se">\n</span><span class="s2">&quot;</span> \
+             <span class="s2">&quot;$!VarSet |MFBD| = &#39;C:\Program Files\Tecplot\Tecplot 360 EX 2016 R2&#39;</span><span class="se">\n</span><span class="s2">&quot;</span> \
+             <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">&quot;</span>\
+             <span class="s2">&quot;$!RemoveVar |MFBD|</span><span class="se">\n</span><span class="s2">&quot;</span> \
+             <span class="s2">&quot;$!Quit&quot;</span> <span class="o">%</span> <span class="n">macro_body</span>
+    <span class="k">return</span> <span class="n">result</span></div>
+
+
+<span class="k">def</span> <span class="nf">_get_extract_from_polyline_command</span><span class="p">(</span><span class="n">polyline</span><span class="p">:</span> <span class="n">PolyLine</span><span class="p">,</span>
+                                       <span class="n">filename</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="s2">&quot;$!EXTRACTFROMPOLYLINE</span><span class="se">\n</span><span class="s2">&quot;</span> \
+           <span class="s2">&quot;EXTRACTLINEPOINTSONLY = NO</span><span class="se">\n</span><span class="s2">&quot;</span> \
+           <span class="s2">&quot;EXTRACTTHROUGHVOLUME = YES</span><span class="se">\n</span><span class="s2">&quot;</span> \
+           <span class="s2">&quot;EXTRACTTOFILE = YES</span><span class="se">\n</span><span class="s2">&quot;</span> \
+           <span class="s2">&quot;FNAME = &#39;</span><span class="si">%s</span><span class="s2">&#39;</span><span class="se">\n</span><span class="s2">&quot;</span> \
+           <span class="s2">&quot;NUMPTS = </span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span> \
+           <span class="s2">&quot;RAWDATA</span><span class="se">\n</span><span class="s2">&quot;</span> \
+           <span class="s2">&quot;</span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">polyline</span><span class="o">.</span><span class="n">numpoints</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">polyline</span><span class="o">.</span><span class="n">nodes</span><span class="p">))</span>
+    <span class="n">template</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">polyline</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">+=</span> <span class="n">template</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">i</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">i</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span>
+
+
+<div class="viewcode-block" id="LoaderType"><a class="viewcode-back" href="../API reference.html#tecplot_lib.LoaderType">[документация]</a><span class="k">class</span> <span class="nc">LoaderType</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">TECPLOT</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">CFX</span> <span class="o">=</span> <span class="mi">1</span></div>
+
+
+<div class="viewcode-block" id="get_open_data_file_command"><a class="viewcode-back" href="../API reference.html#tecplot_lib.get_open_data_file_command">[документация]</a><span class="k">def</span> <span class="nf">get_open_data_file_command</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">loader_type</span><span class="p">:</span> <span class="n">LoaderType</span> <span class="o">=</span> <span class="n">LoaderType</span><span class="o">.</span><span class="n">TECPLOT</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Фукция возвращает строку, содержащую набор команд на скриптовом языке TecPlot для </span>
+<span class="sd">    открытия файла с расширением .plt или .res \n</span>
+<span class="sd">    :param filename: str \n </span>
+<span class="sd">        Путь к файлу с расширенем .plt</span>
+<span class="sd">    :param loader_type: LoaderType \n</span>
+<span class="sd">        Тип загрузчика данных</span>
+<span class="sd">    :return: str \n </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="s2">&quot;$!READDATASET  &#39;</span><span class="si">%s</span><span class="s2">&#39;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">filename</span>
+    <span class="k">if</span> <span class="n">loader_type</span> <span class="o">==</span> <span class="n">LoaderType</span><span class="o">.</span><span class="n">CFX</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="s2">&quot;$!READDATASET  &#39;</span><span class="si">%s%s%s</span><span class="s2"> </span><span class="si">%s%s%s</span><span class="s2"> </span><span class="si">%s%s%s</span><span class="s2"> </span><span class="si">%s%s%s</span><span class="s2"> </span><span class="si">%s%s%s</span><span class="s2"> </span><span class="si">%s%s%s</span><span class="s2"> </span><span class="si">%s%s%s</span><span class="s2"> </span><span class="si">%s%s%s</span><span class="s2">&#39; &quot;</span> \
+                 <span class="s2">&quot;DATASETREADER = &#39;ANSYS CFX (FEA)&#39;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">,</span> <span class="s1">&#39;StandardSyntax&#39;</span><span class="p">,</span> <span class="s1">&#39;&quot;&#39;</span><span class="p">,</span> <span class="s1">&#39;&quot;&#39;</span><span class="p">,</span> <span class="s1">&#39;1.0&#39;</span><span class="p">,</span> <span class="s1">&#39;&quot;&#39;</span><span class="p">,</span> <span class="s1">&#39;&quot;&#39;</span><span class="p">,</span>
+                                                          <span class="s1">&#39;FEALoaderVersion&#39;</span><span class="p">,</span> <span class="s1">&#39;&quot;&#39;</span><span class="p">,</span> <span class="s1">&#39;&quot;&#39;</span><span class="p">,</span> <span class="s1">&#39;435&#39;</span><span class="p">,</span> <span class="s1">&#39;&quot;&#39;</span><span class="p">,</span> <span class="s1">&#39;&quot;&#39;</span><span class="p">,</span>
+                                                          <span class="s1">&#39;FILENAME_File&#39;</span><span class="p">,</span> <span class="s1">&#39;&quot;&#39;</span><span class="p">,</span> <span class="s1">&#39;&quot;&#39;</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;&quot;&#39;</span><span class="p">,</span> <span class="s1">&#39;&quot;&#39;</span><span class="p">,</span>
+                                                          <span class="s1">&#39;AutoAssignStrandIDs&#39;</span><span class="p">,</span> <span class="s1">&#39;&quot;&#39;</span><span class="p">,</span> <span class="s1">&#39;&quot;&#39;</span><span class="p">,</span> <span class="s1">&#39;Yes&#39;</span><span class="p">,</span> <span class="s1">&#39;&quot;&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="get_write_data_set_command"><a class="viewcode-back" href="../API reference.html#tecplot_lib.get_write_data_set_command">[документация]</a><span class="k">def</span> <span class="nf">get_write_data_set_command</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    :param filename: str \n</span>
+<span class="sd">        имя файла с расширением .plt, в который будут сохранены данные</span>
+<span class="sd">    :return: str \n</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="s2">&quot;$!WRITEDATASET  &#39;</span><span class="si">%s</span><span class="s2">&#39; </span><span class="se">\n</span><span class="s2">&quot;</span> \
+             <span class="s2">&quot;  INCLUDETEXT = NO</span><span class="se">\n</span><span class="s2">&quot;</span> \
+             <span class="s2">&quot;  INCLUDEGEOM = NO</span><span class="se">\n</span><span class="s2">&quot;</span> \
+             <span class="s2">&quot;  INCLUDEDATASHARELINKAGE = YES</span><span class="se">\n</span><span class="s2">&quot;</span> \
+             <span class="s2">&quot;  BINARY = YES</span><span class="se">\n</span><span class="s2">&quot;</span> \
+             <span class="s2">&quot;  USEPOINTFORMAT = NO</span><span class="se">\n</span><span class="s2">&quot;</span> \
+             <span class="s2">&quot;  PRECISION = 9</span><span class="se">\n</span><span class="s2">&quot;</span> \
+             <span class="s2">&quot;  TECPLOTVERSIONTOWRITE = TECPLOTCURRENT</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="get_open_layout_command"><a class="viewcode-back" href="../API reference.html#tecplot_lib.get_open_layout_command">[документация]</a><span class="k">def</span> <span class="nf">get_open_layout_command</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Фукция возвращает строку, содержащую набор команд на скриптовом языке TecPlot для </span>
+<span class="sd">    открытия файла с расширением .lay\n</span>
+<span class="sd">    :param filename: str \n </span>
+<span class="sd">        Путь к файлу с расширенем .lay</span>
+<span class="sd">    :return: str \n </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="s2">&quot;$!OPENLAYOUT  &#39;</span><span class="si">%s</span><span class="s2">&#39;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">filename</span>
+    <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="get_save_layout_command"><a class="viewcode-back" href="../API reference.html#tecplot_lib.get_save_layout_command">[документация]</a><span class="k">def</span> <span class="nf">get_save_layout_command</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Фукция возвращает строку, содержащую набор команд на скриптовом языке TecPlot для </span>
+<span class="sd">    сохранения файла с расширением .lay или .plt \n</span>
+<span class="sd">    :param filename: str \n </span>
+<span class="sd">        Путь к файлу с расширенем .lay</span>
+<span class="sd">    :return: str \n </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="s2">&quot;$!SAVELAYOUT  &#39;</span><span class="si">%s</span><span class="s2">&#39;</span><span class="se">\n</span><span class="s2">&quot;</span> \
+             <span class="s2">&quot;  INCLUDEDATA = YES</span><span class="se">\n</span><span class="s2">&quot;</span> \
+             <span class="s2">&quot;  INCLUDEPREVIEW = NO</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">filename</span>
+    <span class="k">return</span> <span class="n">result</span></div>
+
+
+<span class="k">def</span> <span class="nf">_get_data_file_extraction_macro_body</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">polylines</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">PolyLine</span><span class="p">],</span> <span class="n">output_dir</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="n">s1</span> <span class="o">=</span> <span class="n">get_open_data_file_command</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+    <span class="n">s2</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="n">output_filename_template</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">filename</span><span class="p">)[</span><span class="mi">1</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;_line_</span><span class="si">%s</span><span class="s1">.dat&#39;</span>
+    <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">polyline</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">polylines</span><span class="p">):</span>
+        <span class="n">s2</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">_get_extract_from_polyline_command</span><span class="p">(</span><span class="n">polyline</span><span class="p">,</span>
+                                                         <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">output_filename_template</span><span class="p">)</span> <span class="o">%</span> <span class="n">n</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">s1</span> <span class="o">+</span> <span class="n">s2</span>
+
+
+<div class="viewcode-block" id="create_macro_file"><a class="viewcode-back" href="../API reference.html#tecplot_lib.create_macro_file">[документация]</a><span class="k">def</span> <span class="nf">create_macro_file</span><span class="p">(</span><span class="n">macros</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    :param macros: str \n</span>
+<span class="sd">        Строка, содержащая набор команд на скриптовом языке TecPlot</span>
+<span class="sd">    :param filename: str \n</span>
+<span class="sd">        Имя файла, в который будет сохранен макрос</span>
+<span class="sd">    :return: </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+    <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">macros</span><span class="p">)</span>
+    <span class="n">file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="execute_macro"><a class="viewcode-back" href="../API reference.html#tecplot_lib.execute_macro">[документация]</a><span class="k">def</span> <span class="nf">execute_macro</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LineDataExtractor"><a class="viewcode-back" href="../API reference.html#tecplot_lib.LineDataExtractor">[документация]</a><span class="k">class</span> <span class="nc">LineDataExtractor</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Обеспечивает возможность создания макроса, извелающего из .plt файла данные по набору полилиний и</span>
+<span class="sd">    сохраняющего эти данные в текстовые файлы с расширением .dat</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">datafiles_dir</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">,</span> <span class="n">polylines_list</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">PolyLine</span><span class="p">]],</span> <span class="n">macro_name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param datafiles_dir: str \n</span>
+<span class="sd">            Имя директории, в которой располагаются .plt или файлы</span>
+<span class="sd">        :param output_dir: str \n</span>
+<span class="sd">            Имя директории для извлеченных данных</span>
+<span class="sd">        :param polylines_list: List[List[PolyLine]] \n</span>
+<span class="sd">            список списков полилиний, по которым будут извелкаться данные; каждый список из данного списка </span>
+<span class="sd">            соответствует набору полилиний для каждого файла с данными из папки datafiles_dir</span>
+<span class="sd">        :param macro_name: str \n</span>
+<span class="sd">            имя макроса, под которым он будет сохранен</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">datafiles_dir</span> <span class="o">=</span> <span class="n">datafiles_dir</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span> <span class="o">=</span> <span class="n">output_dir</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">polylines_list</span> <span class="o">=</span> <span class="n">polylines_list</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">macro_name</span> <span class="o">=</span> <span class="n">macro_name</span>
+
+    <span class="k">def</span> <span class="nf">_get_macro</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">data_filenames</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">datafiles_dir</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">polylines_list</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">data_filenames</span><span class="p">),</span> <span class="s1">&#39;Number of data files and number of sets of polylines &#39;</span>\
+                                                                <span class="s1">&#39;must be same&#39;</span>
+        <span class="n">macros_body</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">filename</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">data_filenames</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">filename</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;.plt&#39;</span><span class="p">:</span>
+                <span class="n">macros_body</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">_get_data_file_extraction_macro_body</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">datafiles_dir</span><span class="p">,</span> <span class="n">filename</span><span class="p">),</span>
+                                                                           <span class="bp">self</span><span class="o">.</span><span class="n">polylines_list</span><span class="p">[</span><span class="n">n</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">wrap_macro</span><span class="p">(</span><span class="n">macros_body</span><span class="p">)</span>
+
+<div class="viewcode-block" id="LineDataExtractor.run_extraction"><a class="viewcode-back" href="../API reference.html#tecplot_lib.LineDataExtractor.run_extraction">[документация]</a>    <span class="k">def</span> <span class="nf">run_extraction</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">macro</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_macro</span><span class="p">()</span>
+        <span class="n">create_macro_file</span><span class="p">(</span><span class="n">macro</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">macro_name</span><span class="p">)</span>
+        <span class="n">execute_macro</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">macro_name</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="LineDataLoader"><a class="viewcode-back" href="../API reference.html#tecplot_lib.LineDataLoader">[документация]</a><span class="k">class</span> <span class="nc">LineDataLoader</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Позволяет считать извлеченные по полилиниям данные  из всех файлов, содержащихся в папке, путь к которой </span>
+<span class="sd">    хранится в поле data_dirname, и записать данные из каждого файла в экземпляр класса Pandas.DataFrame, доступ к </span>
+<span class="sd">    списку которых осуществляется через поле frames</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_dirname</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param data_dirname: str \n</span>
+<span class="sd">            имя папки, содержащей файлы с извлеченными данными</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_dirname</span> <span class="o">=</span> <span class="n">data_dirname</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frames</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_split_str</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">string</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="n">arr</span> <span class="o">=</span> <span class="n">string</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">sep</span><span class="o">=</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">arr</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">s</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span> <span class="ow">and</span> <span class="n">s</span> <span class="o">!=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">:</span>
+                <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">res</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_format_strings</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">str_list</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">str_list</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">str_list</span><span class="p">):</span>
+            <span class="n">result</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_get_str_list_from_file</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span>
+        <span class="k">while</span> <span class="n">s</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cls</span><span class="o">.</span><span class="n">_split_str</span><span class="p">(</span><span class="n">s</span><span class="p">))</span>
+        <span class="n">file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">)):</span>
+            <span class="n">result</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">_format_strings</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="n">n</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">result</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_get_sum_str_list</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">str_list</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">start</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">with_spaces</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">string</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">str_list</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">n</span> <span class="o">&gt;=</span> <span class="n">start</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">with_spaces</span><span class="p">:</span>
+                    <span class="n">result</span> <span class="o">+=</span> <span class="n">string</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">result</span> <span class="o">+=</span> <span class="n">string</span>
+        <span class="k">if</span> <span class="n">with_spaces</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">:(</span><span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)]</span>
+        <span class="k">return</span> <span class="n">result</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_get_variable_names</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">str_list</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">str_list</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cls</span><span class="o">.</span><span class="n">_get_sum_str_list</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">with_spaces</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+            <span class="k">elif</span> <span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;ZONE&#39;</span><span class="p">:</span>
+                <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cls</span><span class="o">.</span><span class="n">_get_sum_str_list</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">with_spaces</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+            <span class="k">elif</span> <span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;ZONE&#39;</span><span class="p">:</span>
+                <span class="k">break</span>
+        <span class="k">return</span> <span class="n">result</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_get_variable_arrays</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">str_list</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">str_list</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="nb">float</span><span class="p">(</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                    <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">([])</span>
+                    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">i</span><span class="p">:</span>
+                        <span class="n">result</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">j</span><span class="p">))</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="k">pass</span>
+        <span class="k">return</span> <span class="n">result</span>
+
+<div class="viewcode-block" id="LineDataLoader.load"><a class="viewcode-back" href="../API reference.html#tecplot_lib.LineDataLoader.load">[документация]</a>    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">files_list</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_dirname</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">files_list</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">:   Loading file:   </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">LineDataLoader</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="n">filename</span><span class="p">))</span>
+            <span class="n">str_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_str_list_from_file</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_dirname</span><span class="p">,</span> <span class="n">filename</span><span class="p">))</span>
+            <span class="n">var_names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_variable_names</span><span class="p">(</span><span class="n">str_list</span><span class="p">)</span>
+            <span class="n">var_arrays</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_variable_arrays</span><span class="p">(</span><span class="n">str_list</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">frames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_records</span><span class="p">(</span><span class="n">var_arrays</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">var_names</span><span class="p">))</span></div></div>
+
+
+<div class="viewcode-block" id="SliceType"><a class="viewcode-back" href="../API reference.html#tecplot_lib.SliceType">[документация]</a><span class="k">class</span> <span class="nc">SliceType</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">XPLANES</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">YPLANES</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">ZPLANES</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">IPLANES</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">JPLANES</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="n">KPLANES</span> <span class="o">=</span> <span class="mi">5</span>
+    <span class="n">ARBITRARY</span> <span class="o">=</span> <span class="mi">6</span></div>
+
+
+<span class="k">def</span> <span class="nf">_get_slice_setting_macro</span><span class="p">(</span><span class="n">slice_type</span><span class="p">:</span> <span class="n">SliceType</span><span class="p">,</span> <span class="n">position</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="n">position_template</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> = </span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1"> = </span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1"> = </span><span class="si">%s</span><span class="s1">&#39;</span>
+    <span class="n">primary_position</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="k">if</span> <span class="n">slice_type</span> <span class="o">==</span> <span class="n">SliceType</span><span class="o">.</span><span class="n">XPLANES</span> <span class="ow">or</span> <span class="n">slice_type</span> <span class="o">==</span> <span class="n">SliceType</span><span class="o">.</span><span class="n">YPLANES</span> <span class="ow">or</span> <span class="n">slice_type</span> <span class="o">==</span> <span class="n">SliceType</span><span class="o">.</span><span class="n">ZPLANES</span> <span class="ow">or</span> \
+       <span class="n">slice_type</span> <span class="o">==</span> <span class="n">SliceType</span><span class="o">.</span><span class="n">ARBITRARY</span><span class="p">:</span>
+        <span class="n">primary_position</span> <span class="o">=</span> <span class="n">position_template</span> <span class="o">%</span> <span class="p">(</span><span class="s1">&#39;X&#39;</span><span class="p">,</span> <span class="n">position</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;Y&#39;</span><span class="p">,</span> <span class="n">position</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;Z&#39;</span><span class="p">,</span> <span class="n">position</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+    <span class="k">elif</span> <span class="n">slice_type</span> <span class="o">==</span> <span class="n">SliceType</span><span class="o">.</span><span class="n">IPLANES</span> <span class="ow">or</span> <span class="n">slice_type</span> <span class="o">==</span> <span class="n">SliceType</span><span class="o">.</span><span class="n">JPLANES</span> <span class="ow">or</span> <span class="n">slice_type</span> <span class="o">==</span> <span class="n">SliceType</span><span class="o">.</span><span class="n">KPLANES</span><span class="p">:</span>
+        <span class="n">primary_position</span> <span class="o">=</span> <span class="n">position_template</span> <span class="o">%</span> <span class="p">(</span><span class="s1">&#39;I&#39;</span><span class="p">,</span> <span class="n">position</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;J&#39;</span><span class="p">,</span> <span class="n">position</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;K&#39;</span><span class="p">,</span> <span class="n">position</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="n">slice_type</span> <span class="o">==</span> <span class="n">SliceType</span><span class="o">.</span><span class="n">ARBITRARY</span> <span class="ow">and</span> <span class="s1">&#39;normal&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="s1">&#39;normal&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">,</span> <span class="s1">&#39;Normal vector must be specified&#39;</span>
+    <span class="n">normal_string</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="k">if</span> <span class="n">slice_type</span> <span class="o">==</span> <span class="n">SliceType</span><span class="o">.</span><span class="n">ARBITRARY</span> <span class="ow">and</span> <span class="s1">&#39;normal&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+        <span class="n">normal_string</span> <span class="o">=</span> <span class="s1">&#39;$!SLICEATTRIBUTES 1 NORMAl {X = </span><span class="si">%s</span><span class="s1"> Y = </span><span class="si">%s</span><span class="s1"> Z = </span><span class="si">%s</span><span class="s1">}</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;normal&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+                                                                                 <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;normal&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span>
+                                                                                 <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;normal&#39;</span><span class="p">][</span><span class="mi">2</span><span class="p">])</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="s2">&quot;$!SLICELAYERS SHOW = YES</span><span class="se">\n</span><span class="s2">&quot;</span> \
+             <span class="s2">&quot;$!SLICEATTRIBUTES 1  SLICESURFACE = </span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span> \
+             <span class="s2">&quot;$!SLICEATTRIBUTES 1  PRIMARYPOSITION{</span><span class="si">%s</span><span class="s2">}</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">slice_type</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">primary_position</span><span class="p">)</span> <span class="o">+</span> <span class="n">normal_string</span>
+    <span class="k">return</span> <span class="n">result</span>
+
+
+<div class="viewcode-block" id="DataType"><a class="viewcode-back" href="../API reference.html#tecplot_lib.DataType">[документация]</a><span class="k">class</span> <span class="nc">DataType</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">SINGLE</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">SHORTINT</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">DOUBLE</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">BYTE</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">LONGINT</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="n">BIT</span> <span class="o">=</span> <span class="mi">5</span></div>
+
+
+<div class="viewcode-block" id="get_alterdata_command"><a class="viewcode-back" href="../API reference.html#tecplot_lib.get_alterdata_command">[документация]</a><span class="k">def</span> <span class="nf">get_alterdata_command</span><span class="p">(</span><span class="n">equation</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">ignored_divided_by_zero</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">data_type</span><span class="p">:</span> <span class="n">DataType</span> <span class="o">=</span> <span class="n">DataType</span><span class="o">.</span><span class="n">SINGLE</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Возвращает строку, содержащую набор команд на скриптовом языке TecPlot</span>
+<span class="sd">    :param equation: str \n</span>
+<span class="sd">        Строка, содержащее уравнение для TecPlot</span>
+<span class="sd">    :param ignored_divided_by_zero: bool \n</span>
+<span class="sd">    :param data_type: DataType \n</span>
+<span class="sd">    :return: str</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">template</span> <span class="o">=</span> <span class="s2">&quot;$!ALTERDATA</span><span class="se">\n</span><span class="s2">&quot;</span> \
+               <span class="s2">&quot;  EQUATION = &#39;</span><span class="si">%s</span><span class="s2">&#39;</span><span class="se">\n</span><span class="s2">&quot;</span> \
+               <span class="s2">&quot;  IGNOREDIVIDEBYZERO = </span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span> \
+               <span class="s2">&quot;  DATATYPE = </span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="k">if</span> <span class="n">ignored_divided_by_zero</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">template</span> <span class="o">%</span> <span class="p">(</span><span class="n">equation</span><span class="p">,</span> <span class="s1">&#39;YES&#39;</span><span class="p">,</span> <span class="n">data_type</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">template</span> <span class="o">%</span> <span class="p">(</span><span class="n">equation</span><span class="p">,</span> <span class="s1">&#39;NO&#39;</span><span class="p">,</span> <span class="n">data_type</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span></div>
+
+
+<span class="k">def</span> <span class="nf">_get_go_to_2d_macro</span><span class="p">(</span><span class="n">x_axis_var</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">y_axis_var</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">x_line_pos</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">y_line_pos</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span>
+                        <span class="n">rect</span><span class="p">:</span> <span class="nb">tuple</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">90</span><span class="p">),</span> <span class="n">preserve_axis_length</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    :param x_axis_var: int \n</span>
+<span class="sd">        Номер переменной, откладываемой по горизонтальной оси</span>
+<span class="sd">    :param x_line_pos: float \n</span>
+<span class="sd">        Позиция горизонтальной оси по вертикали</span>
+<span class="sd">    :param y_line_pos: float \n</span>
+<span class="sd">        Позиция вертикальной оси по горизонтали \n</span>
+<span class="sd">    :param y_axis_var: int \n</span>
+<span class="sd">        Номер переменной, откладываемой по вертикальной оси</span>
+<span class="sd">    :param rect: tuple, optional \n</span>
+<span class="sd">        Определяет положение прямоугольника сетки на frame, rect=(x1, y1, x2, y2),</span>
+<span class="sd">        по умолчанию rect=(10, 10, 90, 90)</span>
+<span class="sd">    :param preserve_axis_length: bool, optional \n</span>
+<span class="sd">        Сохраняемость масштаба осей при изменении их диапазона</span>
+<span class="sd">    :param kwargs: xlim, ylim (интервалы по осям x и y соотвественно), тип tuple; пример: xlim=(0,1), ylim=(1,2)</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">string1</span> <span class="o">=</span> <span class="s2">&quot;$!PLOTTYPE = CARTESIAN2D</span><span class="se">\n</span><span class="s2">&quot;</span> \
+              <span class="s2">&quot;$!TWODAXIS XDETAIL{VARNUM = </span><span class="si">%s</span><span class="s2">}</span><span class="se">\n</span><span class="s2">&quot;</span> \
+              <span class="s2">&quot;$!TWODAXIS YDETAIL{VARNUM = </span><span class="si">%s</span><span class="s2">}</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">x_axis_var</span><span class="p">,</span> <span class="n">y_axis_var</span><span class="p">)</span>
+    <span class="n">string3</span> <span class="o">=</span> <span class="s2">&quot;$!TWODAXIS</span><span class="se">\n</span><span class="s2">&quot;</span> \
+              <span class="s2">&quot;  GRIDAREA</span><span class="se">\n</span><span class="s2">&quot;</span> \
+              <span class="s2">&quot;  {</span><span class="se">\n</span><span class="s2">&quot;</span> \
+              <span class="s2">&quot;    EXTENTS</span><span class="se">\n</span><span class="s2">&quot;</span> \
+              <span class="s2">&quot;    {</span><span class="se">\n</span><span class="s2">&quot;</span> \
+              <span class="s2">&quot;      X1 = </span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span> \
+              <span class="s2">&quot;      Y1 = </span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span> \
+              <span class="s2">&quot;      X2 = </span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span> \
+              <span class="s2">&quot;      Y2 = </span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span> \
+              <span class="s2">&quot;    }</span><span class="se">\n</span><span class="s2">&quot;</span> \
+              <span class="s2">&quot;  }</span><span class="se">\n</span><span class="s2">&quot;</span> \
+              <span class="s2">&quot;$!TWODAXIS XDETAIL{AXISLINE{POSITION = </span><span class="si">%s</span><span class="s2">}}</span><span class="se">\n</span><span class="s2">&quot;</span> \
+              <span class="s2">&quot;$!TWODAXIS YDETAIL{AXISLINE{POSITION = </span><span class="si">%s</span><span class="s2">}}</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">rect</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">rect</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">rect</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">rect</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span>
+                                                                 <span class="n">x_line_pos</span><span class="p">,</span> <span class="n">y_line_pos</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s1">&#39;xlim&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span> <span class="ow">and</span> <span class="s1">&#39;ylim&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+        <span class="n">string2</span> <span class="o">=</span> <span class="s2">&quot;$!TWODAXIS</span><span class="se">\n</span><span class="s2">&quot;</span> \
+                  <span class="s2">&quot;  PRESERVEAXISSCALE = </span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span> \
+                  <span class="s2">&quot;  XDETAIL</span><span class="se">\n</span><span class="s2">&quot;</span> \
+                  <span class="s2">&quot;    {</span><span class="se">\n</span><span class="s2">&quot;</span>\
+                  <span class="s2">&quot;    RANGEMIN = </span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span> \
+                  <span class="s2">&quot;    RANGEMAX = </span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span> \
+                  <span class="s2">&quot;    }</span><span class="se">\n</span><span class="s2">&quot;</span> \
+                  <span class="s2">&quot;  YDETAIL</span><span class="se">\n</span><span class="s2">&quot;</span> \
+                  <span class="s2">&quot;    {</span><span class="se">\n</span><span class="s2">&quot;</span> \
+                  <span class="s2">&quot;    RANGEMIN = </span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span> \
+                  <span class="s2">&quot;    RANGEMAX = </span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span> \
+                  <span class="s2">&quot;    }</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">((</span><span class="ow">not</span> <span class="n">preserve_axis_length</span><span class="p">)</span><span class="o">.</span><span class="n">__str__</span><span class="p">()</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;xlim&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;xlim&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span>
+                               <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;ylim&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;ylim&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">string2</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">string1</span> <span class="o">+</span> <span class="n">string2</span> <span class="o">+</span> <span class="n">string3</span>
+    <span class="k">return</span> <span class="n">result</span>
+
+
+<div class="viewcode-block" id="Font"><a class="viewcode-back" href="../API reference.html#tecplot_lib.Font">[документация]</a><span class="k">class</span> <span class="nc">Font</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">font_family</span><span class="o">=</span><span class="s1">&#39;Helvetica&#39;</span><span class="p">,</span> <span class="n">is_bold</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">is_italic</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mf">3.</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">font_family</span> <span class="o">=</span> <span class="n">font_family</span>
+        <span class="k">if</span> <span class="n">is_bold</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">is_bold</span> <span class="o">=</span> <span class="s1">&#39;YES&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">is_bold</span> <span class="o">=</span> <span class="s1">&#39;NO&#39;</span>
+        <span class="k">if</span> <span class="n">is_italic</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">is_italic</span> <span class="o">=</span> <span class="s1">&#39;YES&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">is_italic</span> <span class="o">=</span> <span class="s1">&#39;NO&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="n">height</span></div>
+
+
+<span class="k">def</span> <span class="nf">_get_legend_font_settings</span><span class="p">(</span><span class="n">header_font</span><span class="p">:</span> <span class="n">Font</span> <span class="o">=</span> <span class="n">Font</span><span class="p">(),</span> <span class="n">number_font</span><span class="p">:</span> <span class="n">Font</span> <span class="o">=</span> <span class="n">Font</span><span class="p">())</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="n">header_settings</span> <span class="o">=</span> <span class="s2">&quot;$!GLOBALCONTOUR 1  LEGEND{HEADERTEXTSHAPE{FONTFAMILY = &#39;</span><span class="si">%s</span><span class="s2">&#39;}}</span><span class="se">\n</span><span class="s2">&quot;</span> \
+                      <span class="s2">&quot;$!GLOBALCONTOUR 1  LEGEND{HEADERTEXTSHAPE{HEIGHT = </span><span class="si">%s</span><span class="s2">}}</span><span class="se">\n</span><span class="s2">&quot;</span> \
+                      <span class="s2">&quot;$!GLOBALCONTOUR 1  LEGEND{HEADERTEXTSHAPE{ISITALIC = </span><span class="si">%s</span><span class="s2">}}</span><span class="se">\n</span><span class="s2">&quot;</span> \
+                      <span class="s2">&quot;$!GLOBALCONTOUR 1  LEGEND{HEADERTEXTSHAPE{ISBOLD = </span><span class="si">%s</span><span class="s2">}}</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">header_font</span><span class="o">.</span><span class="n">font_family</span><span class="p">,</span>
+                                                                                     <span class="n">header_font</span><span class="o">.</span><span class="n">height</span><span class="p">,</span>
+                                                                                     <span class="n">header_font</span><span class="o">.</span><span class="n">is_italic</span><span class="p">,</span>
+                                                                                     <span class="n">header_font</span><span class="o">.</span><span class="n">is_bold</span><span class="p">)</span>
+    <span class="n">number_settings</span> <span class="o">=</span> <span class="s2">&quot;$!GLOBALCONTOUR 1  LEGEND{NUMBERTEXTSHAPE{FONTFAMILY = &#39;</span><span class="si">%s</span><span class="s2">&#39;}}</span><span class="se">\n</span><span class="s2">&quot;</span> \
+                      <span class="s2">&quot;$!GLOBALCONTOUR 1  LEGEND{NUMBERTEXTSHAPE{HEIGHT = </span><span class="si">%s</span><span class="s2">}}</span><span class="se">\n</span><span class="s2">&quot;</span> \
+                      <span class="s2">&quot;$!GLOBALCONTOUR 1  LEGEND{NUMBERTEXTSHAPE{ISITALIC = </span><span class="si">%s</span><span class="s2">}}</span><span class="se">\n</span><span class="s2">&quot;</span> \
+                      <span class="s2">&quot;$!GLOBALCONTOUR 1  LEGEND{NUMBERTEXTSHAPE{ISBOLD = </span><span class="si">%s</span><span class="s2">}}</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">number_font</span><span class="o">.</span><span class="n">font_family</span><span class="p">,</span>
+                                                                                     <span class="n">number_font</span><span class="o">.</span><span class="n">height</span><span class="p">,</span>
+                                                                                     <span class="n">number_font</span><span class="o">.</span><span class="n">is_italic</span><span class="p">,</span>
+                                                                                     <span class="n">number_font</span><span class="o">.</span><span class="n">is_bold</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">header_settings</span> <span class="o">+</span> <span class="n">number_settings</span>
+    <span class="k">return</span> <span class="n">result</span>
+
+
+<span class="k">def</span> <span class="nf">_get_axis_font_settings</span><span class="p">(</span><span class="n">x_title_font</span><span class="p">:</span> <span class="n">Font</span> <span class="o">=</span> <span class="n">Font</span><span class="p">(),</span> <span class="n">x_label_font</span><span class="p">:</span> <span class="n">Font</span> <span class="o">=</span> <span class="n">Font</span><span class="p">(),</span> <span class="n">x_title_offset</span><span class="o">=</span><span class="mf">5.</span><span class="p">,</span>
+                            <span class="n">y_title_font</span><span class="p">:</span> <span class="n">Font</span> <span class="o">=</span> <span class="n">Font</span><span class="p">(),</span> <span class="n">y_label_font</span><span class="p">:</span> <span class="n">Font</span> <span class="o">=</span> <span class="n">Font</span><span class="p">(),</span> <span class="n">y_title_offset</span><span class="o">=</span><span class="mf">5.</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="n">x_title</span> <span class="o">=</span> <span class="s2">&quot;$!TWODAXIS XDETAIL{TITLE{TEXTSHAPE{FONTFAMILY = &#39;</span><span class="si">%s</span><span class="s2">&#39;}}}</span><span class="se">\n</span><span class="s2">&quot;</span> \
+              <span class="s2">&quot;$!TWODAXIS XDETAIL{TITLE{TEXTSHAPE{HEIGHT =</span><span class="si">%s</span><span class="s2">}}}</span><span class="se">\n</span><span class="s2">&quot;</span> \
+              <span class="s2">&quot;$!TWODAXIS XDETAIL{TITLE{TEXTSHAPE{ISITALIC = </span><span class="si">%s</span><span class="s2">}}}</span><span class="se">\n</span><span class="s2">&quot;</span> \
+              <span class="s2">&quot;$!TWODAXIS XDETAIL{TITLE{TEXTSHAPE{ISBOLD = </span><span class="si">%s</span><span class="s2">}}}</span><span class="se">\n</span><span class="s2">&quot;</span> \
+              <span class="s2">&quot;$!TWODAXIS XDETAIL{TITLE{OFFSET = </span><span class="si">%s</span><span class="s2">}}</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">x_title_font</span><span class="o">.</span><span class="n">font_family</span><span class="p">,</span> <span class="n">x_title_font</span><span class="o">.</span><span class="n">height</span><span class="p">,</span>
+                                                            <span class="n">x_title_font</span><span class="o">.</span><span class="n">is_italic</span><span class="p">,</span> <span class="n">x_title_font</span><span class="o">.</span><span class="n">is_bold</span><span class="p">,</span>
+                                                            <span class="n">x_title_offset</span><span class="p">)</span>
+    <span class="n">x_label</span> <span class="o">=</span> <span class="s2">&quot;$!TWODAXIS XDETAIL{TICKLABEL{TEXTSHAPE{FONTFAMILY = &#39;</span><span class="si">%s</span><span class="s2">&#39;}}}</span><span class="se">\n</span><span class="s2">&quot;</span> \
+              <span class="s2">&quot;$!TWODAXIS XDETAIL{TICKLABEL{TEXTSHAPE{HEIGHT =</span><span class="si">%s</span><span class="s2">}}}</span><span class="se">\n</span><span class="s2">&quot;</span> \
+              <span class="s2">&quot;$!TWODAXIS XDETAIL{TICKLABEL{TEXTSHAPE{ISITALIC = </span><span class="si">%s</span><span class="s2">}}}</span><span class="se">\n</span><span class="s2">&quot;</span> \
+              <span class="s2">&quot;$!TWODAXIS XDETAIL{TICKLABEL{TEXTSHAPE{ISBOLD = </span><span class="si">%s</span><span class="s2">}}}</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">x_label_font</span><span class="o">.</span><span class="n">font_family</span><span class="p">,</span>
+                                                                           <span class="n">x_label_font</span><span class="o">.</span><span class="n">height</span><span class="p">,</span> <span class="n">x_label_font</span><span class="o">.</span><span class="n">is_italic</span><span class="p">,</span>
+                                                                           <span class="n">x_label_font</span><span class="o">.</span><span class="n">is_bold</span><span class="p">)</span>
+    <span class="n">y_title</span> <span class="o">=</span> <span class="s2">&quot;$!TWODAXIS YDETAIL{TITLE{TEXTSHAPE{FONTFAMILY = &#39;</span><span class="si">%s</span><span class="s2">&#39;}}}</span><span class="se">\n</span><span class="s2">&quot;</span> \
+              <span class="s2">&quot;$!TWODAXIS YDETAIL{TITLE{TEXTSHAPE{HEIGHT =</span><span class="si">%s</span><span class="s2">}}}</span><span class="se">\n</span><span class="s2">&quot;</span> \
+              <span class="s2">&quot;$!TWODAXIS YDETAIL{TITLE{TEXTSHAPE{ISITALIC = </span><span class="si">%s</span><span class="s2">}}}</span><span class="se">\n</span><span class="s2">&quot;</span> \
+              <span class="s2">&quot;$!TWODAXIS YDETAIL{TITLE{TEXTSHAPE{ISBOLD = </span><span class="si">%s</span><span class="s2">}}}</span><span class="se">\n</span><span class="s2">&quot;</span> \
+              <span class="s2">&quot;$!TWODAXIS YDETAIL{TITLE{OFFSET = </span><span class="si">%s</span><span class="s2">}}</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">y_title_font</span><span class="o">.</span><span class="n">font_family</span><span class="p">,</span> <span class="n">y_title_font</span><span class="o">.</span><span class="n">height</span><span class="p">,</span>
+                                                            <span class="n">y_title_font</span><span class="o">.</span><span class="n">is_italic</span><span class="p">,</span> <span class="n">y_title_font</span><span class="o">.</span><span class="n">is_bold</span><span class="p">,</span>
+                                                            <span class="n">y_title_offset</span><span class="p">)</span>
+    <span class="n">y_label</span> <span class="o">=</span> <span class="s2">&quot;$!TWODAXIS YDETAIL{TICKLABEL{TEXTSHAPE{FONTFAMILY = &#39;</span><span class="si">%s</span><span class="s2">&#39;}}}</span><span class="se">\n</span><span class="s2">&quot;</span> \
+              <span class="s2">&quot;$!TWODAXIS YDETAIL{TICKLABEL{TEXTSHAPE{HEIGHT =</span><span class="si">%s</span><span class="s2">}}}</span><span class="se">\n</span><span class="s2">&quot;</span> \
+              <span class="s2">&quot;$!TWODAXIS YDETAIL{TICKLABEL{TEXTSHAPE{ISITALIC = </span><span class="si">%s</span><span class="s2">}}}</span><span class="se">\n</span><span class="s2">&quot;</span> \
+              <span class="s2">&quot;$!TWODAXIS YDETAIL{TICKLABEL{TEXTSHAPE{ISBOLD = </span><span class="si">%s</span><span class="s2">}}}</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">y_label_font</span><span class="o">.</span><span class="n">font_family</span><span class="p">,</span>
+                                                                           <span class="n">y_label_font</span><span class="o">.</span><span class="n">height</span><span class="p">,</span> <span class="n">y_label_font</span><span class="o">.</span><span class="n">is_italic</span><span class="p">,</span>
+                                                                           <span class="n">y_label_font</span><span class="o">.</span><span class="n">is_bold</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">x_title</span> <span class="o">+</span> <span class="n">x_label</span> <span class="o">+</span> <span class="n">y_title</span> <span class="o">+</span> <span class="n">y_label</span>
+    <span class="k">return</span> <span class="n">result</span>
+
+
+<span class="k">def</span> <span class="nf">_get_levels_setting_macro</span><span class="p">(</span><span class="n">variable_number</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">min_level</span><span class="p">,</span> <span class="n">max_level</span><span class="p">,</span>
+                              <span class="n">num_levels</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="n">levels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">min_level</span><span class="p">,</span> <span class="n">max_level</span><span class="p">,</span> <span class="n">num_levels</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="s2">&quot;$!SETCONTOURVAR</span><span class="se">\n</span><span class="s2">&quot;</span> \
+             <span class="s2">&quot;  VAR = </span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span> \
+             <span class="s2">&quot;  CONTOURGROUP = 1</span><span class="se">\n</span><span class="s2">&quot;</span> \
+             <span class="s2">&quot;$!CONTOURLEVELS NEW</span><span class="se">\n</span><span class="s2">&quot;</span> \
+             <span class="s2">&quot;  CONTOURGROUP = 1</span><span class="se">\n</span><span class="s2">&quot;</span> \
+             <span class="s2">&quot;  RAWDATA</span><span class="se">\n</span><span class="s2">&quot;</span> \
+             <span class="s2">&quot;</span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">variable_number</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">levels</span><span class="p">))</span>
+    <span class="n">template</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="se">\n</span><span class="s1">&#39;</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">levels</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">+=</span> <span class="n">template</span> <span class="o">%</span> <span class="n">i</span>
+    <span class="k">return</span> <span class="n">result</span>
+
+
+<span class="k">def</span> <span class="nf">_get_legend_settings_macro</span><span class="p">(</span><span class="n">xy_position</span><span class="p">:</span> <span class="nb">tuple</span> <span class="o">=</span> <span class="p">(</span><span class="mi">95</span><span class="p">,</span> <span class="mi">80</span><span class="p">),</span> <span class="n">rowspacing</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.2</span><span class="p">,</span> <span class="n">auto_levelskip</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+                               <span class="n">isvertical</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">isvertical</span><span class="p">:</span>
+        <span class="n">isvertical_str</span> <span class="o">=</span> <span class="s1">&#39;YES&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">isvertical_str</span> <span class="o">=</span> <span class="s1">&#39;NO&#39;</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="s2">&quot;$!GLOBALCONTOUR 1  LEGEND{ISVERTICAL = </span><span class="si">%s</span><span class="s2">}</span><span class="se">\n</span><span class="s2">&quot;</span> \
+             <span class="s2">&quot;$!GLOBALCONTOUR 1  LABELS{AUTOLEVELSKIP = </span><span class="si">%s</span><span class="s2">}</span><span class="se">\n</span><span class="s2">&quot;</span> \
+             <span class="s2">&quot;$!GLOBALCONTOUR 1  LEGEND{ROWSPACING = </span><span class="si">%s</span><span class="s2">}</span><span class="se">\n</span><span class="s2">&quot;</span> \
+             <span class="s2">&quot;$!GLOBALCONTOUR 1</span><span class="se">\n</span><span class="s2">&quot;</span> \
+             <span class="s2">&quot;LEGEND</span><span class="se">\n</span><span class="s2">&quot;</span> \
+             <span class="s2">&quot;{</span><span class="se">\n</span><span class="s2">&quot;</span> \
+             <span class="s2">&quot;SHOW = YES</span><span class="se">\n</span><span class="s2">&quot;</span> \
+             <span class="s2">&quot;XYPOS</span><span class="se">\n</span><span class="s2">&quot;</span> \
+             <span class="s2">&quot;{</span><span class="se">\n</span><span class="s2">&quot;</span> \
+             <span class="s2">&quot;X = </span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span> \
+             <span class="s2">&quot;Y = </span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span> \
+             <span class="s2">&quot;}</span><span class="se">\n</span><span class="s2">&quot;</span> \
+             <span class="s2">&quot;}</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">isvertical_str</span><span class="p">,</span> <span class="n">auto_levelskip</span><span class="p">,</span> <span class="n">rowspacing</span><span class="p">,</span> <span class="n">xy_position</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">xy_position</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">result</span>
+
+
+<div class="viewcode-block" id="ColorDistribution"><a class="viewcode-back" href="../API reference.html#tecplot_lib.ColorDistribution">[документация]</a><span class="k">class</span> <span class="nc">ColorDistribution</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">BANDED</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">CONTINUOUS</span> <span class="o">=</span> <span class="mi">1</span></div>
+
+
+<div class="viewcode-block" id="ColorMap"><a class="viewcode-back" href="../API reference.html#tecplot_lib.ColorMap">[документация]</a><span class="k">class</span> <span class="nc">ColorMap</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">MODERN</span> <span class="o">=</span> <span class="s2">&quot;&#39;Modern&#39;&quot;</span>
+    <span class="n">SMALL_RAINBOW</span> <span class="o">=</span> <span class="s2">&quot;&#39;Small Rainbow&#39;&quot;</span>
+    <span class="n">WILD</span> <span class="o">=</span> <span class="s2">&quot;&#39;Wild&#39;&quot;</span>
+    <span class="n">GRAY_SCALE</span> <span class="o">=</span> <span class="s2">&quot;GrayScale&quot;</span></div>
+
+
+<span class="k">def</span> <span class="nf">_get_colormap_settings_macro</span><span class="p">(</span><span class="n">color_distribution</span><span class="p">:</span> <span class="n">ColorDistribution</span> <span class="o">=</span> <span class="n">ColorDistribution</span><span class="o">.</span><span class="n">BANDED</span><span class="p">,</span>
+                                 <span class="n">colormap_name</span><span class="p">:</span> <span class="n">ColorMap</span> <span class="o">=</span> <span class="n">ColorMap</span><span class="o">.</span><span class="n">MODERN</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    :param color_distribution:</span>
+<span class="sd">    :param colormap_name:</span>
+<span class="sd">    :param kwargs: color_max и color_min, если распределение цвета =  ColorDistribution.CONTINUOUS</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">string1</span> <span class="o">=</span> <span class="s2">&quot;$!GLOBALCONTOUR 1  COLORMAPNAME = </span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span> \
+              <span class="s2">&quot;$!GLOBALCONTOUR 1  COLORMAPFILTER{COLORMAPDISTRIBUTION = </span><span class="si">%s</span><span class="s2">}</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">colormap_name</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                                                                                  <span class="n">color_distribution</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">color_distribution</span> <span class="o">==</span> <span class="n">ColorDistribution</span><span class="o">.</span><span class="n">CONTINUOUS</span> <span class="ow">and</span> <span class="s1">&#39;color_min&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span> <span class="ow">and</span> <span class="s1">&#39;color_max&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+        <span class="n">string2</span> <span class="o">=</span> <span class="s2">&quot;$!GLOBALCONTOUR 1  COLORMAPFILTER{CONTINUOUSCOLOR{CMIN = </span><span class="si">%s</span><span class="s2">}}</span><span class="se">\n</span><span class="s2">&quot;</span> \
+                  <span class="s2">&quot;$!GLOBALCONTOUR 1  COLORMAPFILTER{CONTINUOUSCOLOR{CMAX = </span><span class="si">%s</span><span class="s2">}}</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;color_min&#39;</span><span class="p">],</span>
+                                                                                       <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;color_max&#39;</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">string2</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">string1</span> <span class="o">+</span> <span class="n">string2</span>
+    <span class="k">return</span> <span class="n">result</span>
+
+
+<span class="k">def</span> <span class="nf">_get_extract_slice_command</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">return</span> <span class="s2">&quot;$!CREATESLICEZONES</span><span class="se">\n</span><span class="s2">&quot;</span>
+
+
+<span class="k">def</span> <span class="nf">_get_activate_zones_command</span><span class="p">(</span><span class="n">zone_number_list</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="n">zones</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">zone_number_list</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">n</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">zone_number_list</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">zones</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">,&#39;</span> <span class="o">%</span> <span class="n">i</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">zones</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">i</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="s2">&quot;$!ACTIVEFIELDMAPS = [</span><span class="si">%s</span><span class="s2">]</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">zones</span>
+    <span class="k">return</span> <span class="n">result</span>
+
+
+<span class="k">def</span> <span class="nf">_get_export_command</span><span class="p">(</span><span class="n">exportfname</span><span class="p">,</span> <span class="n">imagewidth</span><span class="o">=</span><span class="mi">1200</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="s2">&quot;$!EXPORTSETUP EXPORTFNAME = &#39;</span><span class="si">%s</span><span class="s2">&#39;</span><span class="se">\n</span><span class="s2">&quot;</span> \
+             <span class="s2">&quot;$!EXPORTSETUP IMAGEWIDTH = </span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span> \
+             <span class="s2">&quot;$!EXPORT</span><span class="se">\n</span><span class="s2">&quot;</span> \
+             <span class="s2">&quot;  EXPORTREGION = CURRENTFRAME</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">exportfname</span><span class="p">,</span> <span class="n">imagewidth</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span>
+
+
+<span class="k">def</span> <span class="nf">_get_delete_zones_command</span><span class="p">(</span><span class="n">zone_number_list</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="n">zones</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">zone_number_list</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">n</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">zone_number_list</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">zones</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">,&#39;</span> <span class="o">%</span> <span class="n">i</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">zones</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">i</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="s2">&quot;$!DELETEZONES [</span><span class="si">%s</span><span class="s2">]</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">zones</span>
+    <span class="k">return</span> <span class="n">result</span>
+
+
+<span class="k">def</span> <span class="nf">_get_show_contour_command</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">return</span> <span class="s2">&quot;$!FIELDLAYERS SHOWCONTOUR = YES</span><span class="se">\n</span><span class="s2">&quot;</span>
+
+
+<span class="k">def</span> <span class="nf">_get_go_to_3d_command</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">return</span> <span class="s2">&quot;$!PLOTTYPE = CARTESIAN3D</span><span class="se">\n</span><span class="s2">&quot;</span>
+
+
+<span class="k">def</span> <span class="nf">_get_frame_size_commands</span><span class="p">(</span><span class="n">width</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">height</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="s2">&quot;$!FRAMELAYOUT HEIGHT = </span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span> \
+             <span class="s2">&quot;$!FRAMELAYOUT WIDTH = </span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">height</span><span class="p">,</span> <span class="n">width</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span>
+
+
+<div class="viewcode-block" id="FrameSettings"><a class="viewcode-back" href="../API reference.html#tecplot_lib.FrameSettings">[документация]</a><span class="k">class</span> <span class="nc">FrameSettings</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">width</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span> <span class="n">height</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="mi">8</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param width:  float, optional \n</span>
+<span class="sd">            Ширина фрейма</span>
+<span class="sd">        :param height: float, optional \n</span>
+<span class="sd">            Высота фрейма</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">width</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="n">height</span></div>
+
+
+<div class="viewcode-block" id="SliceSettings"><a class="viewcode-back" href="../API reference.html#tecplot_lib.SliceSettings">[документация]</a><span class="k">class</span> <span class="nc">SliceSettings</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">slice_type</span><span class="p">:</span> <span class="n">SliceType</span><span class="p">,</span> <span class="n">position</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param slice_type: SliceType \n</span>
+<span class="sd">            определяет ориентацию секущей плоскости</span>
+<span class="sd">        :param position: tuple \n</span>
+<span class="sd">            кортеж из трех элементов, определяющих координаты точки, черех которую </span>
+<span class="sd">            проходит секущая плоскость</span>
+<span class="sd">        :param kwargs: 1. normal - кортеж, задающий координаты нормали к секущей плоскости, необходимо задать, если</span>
+<span class="sd">                slice_type = SliceType.ARBITRARY</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">slice_type</span> <span class="o">=</span> <span class="n">slice_type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="n">position</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span> <span class="o">=</span> <span class="n">kwargs</span></div>
+
+
+<div class="viewcode-block" id="LevelSettings"><a class="viewcode-back" href="../API reference.html#tecplot_lib.LevelSettings">[документация]</a><span class="k">class</span> <span class="nc">LevelSettings</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">variable_number</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">min_level</span><span class="p">,</span> <span class="n">max_level</span><span class="p">,</span> <span class="n">num_levels</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param variable_number: int \n</span>
+<span class="sd">            номер отображаемой переменной переменной</span>
+<span class="sd">        :param min_level: float \n</span>
+<span class="sd">            нижняя граница отображаемого интервала значений переменной</span>
+<span class="sd">        :param max_level: float \n</span>
+<span class="sd">            верхняя граница отображаемого интервала значений переменной</span>
+<span class="sd">        :param num_levels: int \</span>
+<span class="sd">            число уровней в легенде</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">variable_number</span> <span class="o">=</span> <span class="n">variable_number</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_level</span> <span class="o">=</span> <span class="n">min_level</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_level</span> <span class="o">=</span> <span class="n">max_level</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_levels</span> <span class="o">=</span> <span class="n">num_levels</span></div>
+
+
+<div class="viewcode-block" id="LegendSettings"><a class="viewcode-back" href="../API reference.html#tecplot_lib.LegendSettings">[документация]</a><span class="k">class</span> <span class="nc">LegendSettings</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xy_position</span><span class="p">:</span> <span class="nb">tuple</span> <span class="o">=</span> <span class="p">(</span><span class="mi">95</span><span class="p">,</span> <span class="mi">80</span><span class="p">),</span> <span class="n">rowspacing</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.2</span><span class="p">,</span> <span class="n">auto_levelskip</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+                 <span class="n">isvertical</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">header_font</span><span class="p">:</span> <span class="n">Font</span> <span class="o">=</span> <span class="n">Font</span><span class="p">(),</span> <span class="n">number_font</span><span class="p">:</span> <span class="n">Font</span> <span class="o">=</span> <span class="n">Font</span><span class="p">()):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param xy_position: tuple, optional \n</span>
+<span class="sd">            позиция легенды в координатах экрана, по умолчанию (95, 80)</span>
+<span class="sd">        :param rowspacing: float, optional \n</span>
+<span class="sd">            интервал между строками, по умолчанию 1.2</span>
+<span class="sd">        :param auto_levelskip: int, optional \n</span>
+<span class="sd">            пропуск уровней, по умолчанию 1 (без пропуска)</span>
+<span class="sd">        :param isvertical: bool \n</span>
+<span class="sd">            параметр, определяющей вертикальность легенды, по умолчанию True</span>
+<span class="sd">        :param header_font: Font, optional \n</span>
+<span class="sd">            экземпляр класса Font, содержащий настройки шрифта для заголовка легенды</span>
+<span class="sd">        :param number_font: Font, optional \n</span>
+<span class="sd">            экземпляр класса Font, содержащий настройки шрифта для лэйблов легенды</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">xy_position</span> <span class="o">=</span> <span class="n">xy_position</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rowspacing</span> <span class="o">=</span> <span class="n">rowspacing</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">auto_levelskip</span> <span class="o">=</span> <span class="n">auto_levelskip</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">isvertical</span> <span class="o">=</span> <span class="n">isvertical</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">header_font</span> <span class="o">=</span> <span class="n">header_font</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">number_font</span> <span class="o">=</span> <span class="n">number_font</span></div>
+
+
+<div class="viewcode-block" id="ColormapSettings"><a class="viewcode-back" href="../API reference.html#tecplot_lib.ColormapSettings">[документация]</a><span class="k">class</span> <span class="nc">ColormapSettings</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">color_distribution</span><span class="p">:</span> <span class="n">ColorDistribution</span> <span class="o">=</span> <span class="n">ColorDistribution</span><span class="o">.</span><span class="n">BANDED</span><span class="p">,</span>
+                 <span class="n">colormap_name</span><span class="p">:</span> <span class="n">ColorMap</span> <span class="o">=</span> <span class="n">ColorMap</span><span class="o">.</span><span class="n">MODERN</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param color_distribution:  ColorDistribution, optional \n</span>
+<span class="sd">            распределения цвета, по умолчанию ColorDistribution.BANDED</span>
+<span class="sd">        :param colormap_name: ColorMap, optional \n</span>
+<span class="sd">            цветовая схема, по умолчанию ColorMap.MODERN</span>
+<span class="sd">        :param kwargs: color_max и color_min, если распределение цвета =  ColorDistribution.CONTINUOUS</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">color_distribution</span> <span class="o">=</span> <span class="n">color_distribution</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">colormap_name</span> <span class="o">=</span> <span class="n">colormap_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span> <span class="o">=</span> <span class="n">kwargs</span></div>
+
+
+<div class="viewcode-block" id="AxisSettings"><a class="viewcode-back" href="../API reference.html#tecplot_lib.AxisSettings">[документация]</a><span class="k">class</span> <span class="nc">AxisSettings</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x_axis_var</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">y_axis_var</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">rect</span><span class="p">:</span> <span class="nb">tuple</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">90</span><span class="p">),</span> <span class="n">x_line_pos</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                 <span class="n">y_line_pos</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">preserve_axis_length</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+                 <span class="n">x_title_font</span><span class="p">:</span> <span class="n">Font</span> <span class="o">=</span> <span class="n">Font</span><span class="p">(),</span> <span class="n">x_label_font</span><span class="p">:</span> <span class="n">Font</span> <span class="o">=</span> <span class="n">Font</span><span class="p">(),</span> <span class="n">x_title_offset</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="mf">5.</span><span class="p">,</span>
+                 <span class="n">y_title_font</span><span class="p">:</span> <span class="n">Font</span> <span class="o">=</span> <span class="n">Font</span><span class="p">(),</span> <span class="n">y_label_font</span><span class="p">:</span> <span class="n">Font</span> <span class="o">=</span> <span class="n">Font</span><span class="p">(),</span> <span class="n">y_title_offset</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="mf">5.</span><span class="p">,</span>
+                 <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param x_axis_var: int \n</span>
+<span class="sd">            номер переменной, откладываемая по горизонтальной оси, например, x_axis_var = 0</span>
+<span class="sd">        :param y_axis_var: int \n</span>
+<span class="sd">            номер переменной, откладываемая по вертикальной оси</span>
+<span class="sd">        :param rect: tuple, optional \n</span>
+<span class="sd">            определяет положение прямоугольника сетки на frame, rect=(x1, y1, x2, y2),</span>
+<span class="sd">            по умолчанию rect=(10, 10, 90, 90)</span>
+<span class="sd">        :param preserve_axis_length: bool, optional \n</span>
+<span class="sd">            Сохраняемость масштаба осей при изменении их диапазона</span>
+<span class="sd">        :param x_line_pos: float \n</span>
+<span class="sd">            Позиция горизонтальной оси по вертикали</span>
+<span class="sd">        :param y_line_pos: float \n</span>
+<span class="sd">            Позиция вертикальной оси по горизонтали \n</span>
+<span class="sd">        :param x_title_font: Font, optional \n</span>
+<span class="sd">            экземпляр класса Font, содержащий настройки шрифта для заголовка оси x</span>
+<span class="sd">        :param x_label_font: Font, optional \n</span>
+<span class="sd">            экземпляр класса Font, содержащий настройки шрифта для лэйблов оси x</span>
+<span class="sd">        :param x_title_offset: float, optional \n</span>
+<span class="sd">            сдвиг заголовка оси x относсительно оси</span>
+<span class="sd">        :param y_title_font: Font, optional \n</span>
+<span class="sd">            экземпляр класса Font, содержащий настройки шрифта для заголовка оси y</span>
+<span class="sd">        :param y_label_font: Font, optional \n</span>
+<span class="sd">            экземпляр класса Font, содержащий настройки шрифта для лэйблов оси y</span>
+<span class="sd">        :param y_title_offset: int, optional \n</span>
+<span class="sd">            сдвиг заголовка оси y относсительно оси</span>
+<span class="sd">        :param kwargs: xlim и ylim (интервалы по осям x и y соотвественно), тип tuple; пример: xlim=(0,1), ylim=(1,2)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x_axis_var</span> <span class="o">=</span> <span class="n">x_axis_var</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y_axis_var</span> <span class="o">=</span> <span class="n">y_axis_var</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rect</span> <span class="o">=</span> <span class="n">rect</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">preserve_axis_scale</span> <span class="o">=</span> <span class="n">preserve_axis_length</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x_line_pos</span> <span class="o">=</span> <span class="n">x_line_pos</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y_line_pos</span> <span class="o">=</span> <span class="n">y_line_pos</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x_title_font</span> <span class="o">=</span> <span class="n">x_title_font</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x_label_font</span> <span class="o">=</span> <span class="n">x_label_font</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x_title_offset</span> <span class="o">=</span> <span class="n">x_title_offset</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y_title_font</span> <span class="o">=</span> <span class="n">y_title_font</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y_label_font</span> <span class="o">=</span> <span class="n">y_label_font</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y_title_offset</span> <span class="o">=</span> <span class="n">y_title_offset</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span> <span class="o">=</span> <span class="n">kwargs</span></div>
+
+
+<div class="viewcode-block" id="ExportSettings"><a class="viewcode-back" href="../API reference.html#tecplot_lib.ExportSettings">[документация]</a><span class="k">class</span> <span class="nc">ExportSettings</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">zone_number</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">exportfname</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">imagewidth</span><span class="o">=</span><span class="mi">1200</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param zone_number: int \n</span>
+<span class="sd">            номер зоны, в которую будут извлечены данные среза, (на единицу большего общего</span>
+<span class="sd">            количества зон)</span>
+<span class="sd">        :param exportfname:  str \n</span>
+<span class="sd">            имя файла, в который будет осуществляться экспорт</span>
+<span class="sd">        :param imagewidth: int, optional \n</span>
+<span class="sd">            ширина картинки</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">zone_number</span> <span class="o">=</span> <span class="n">zone_number</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">exportfname</span> <span class="o">=</span> <span class="n">exportfname</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">imagewidth</span> <span class="o">=</span> <span class="n">imagewidth</span></div>
+
+
+<span class="k">def</span> <span class="nf">_get_create_picture_macro</span><span class="p">(</span><span class="n">axis_settings</span><span class="p">:</span> <span class="n">AxisSettings</span><span class="p">,</span> <span class="n">export_settings</span><span class="p">:</span> <span class="n">ExportSettings</span><span class="p">,</span>
+                              <span class="n">frame_settings</span><span class="p">:</span> <span class="n">FrameSettings</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+
+    <span class="n">extract_slice</span> <span class="o">=</span> <span class="n">_get_extract_slice_command</span><span class="p">()</span>
+    <span class="n">show_contour</span> <span class="o">=</span> <span class="n">_get_show_contour_command</span><span class="p">()</span>
+    <span class="n">go_to_2d</span> <span class="o">=</span> <span class="n">_get_go_to_2d_macro</span><span class="p">(</span><span class="n">axis_settings</span><span class="o">.</span><span class="n">x_axis_var</span><span class="p">,</span> <span class="n">axis_settings</span><span class="o">.</span><span class="n">y_axis_var</span><span class="p">,</span> <span class="n">axis_settings</span><span class="o">.</span><span class="n">x_line_pos</span><span class="p">,</span>
+                                   <span class="n">axis_settings</span><span class="o">.</span><span class="n">y_line_pos</span><span class="p">,</span> <span class="n">axis_settings</span><span class="o">.</span><span class="n">rect</span><span class="p">,</span>
+                                   <span class="n">axis_settings</span><span class="o">.</span><span class="n">preserve_axis_scale</span><span class="p">,</span> <span class="o">**</span><span class="n">axis_settings</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">axis_font_settings</span> <span class="o">=</span> <span class="n">_get_axis_font_settings</span><span class="p">(</span><span class="n">axis_settings</span><span class="o">.</span><span class="n">x_title_font</span><span class="p">,</span> <span class="n">axis_settings</span><span class="o">.</span><span class="n">x_label_font</span><span class="p">,</span>
+                                                 <span class="n">axis_settings</span><span class="o">.</span><span class="n">x_title_offset</span><span class="p">,</span> <span class="n">axis_settings</span><span class="o">.</span><span class="n">y_title_font</span><span class="p">,</span>
+                                                 <span class="n">axis_settings</span><span class="o">.</span><span class="n">y_label_font</span><span class="p">,</span> <span class="n">axis_settings</span><span class="o">.</span><span class="n">y_title_offset</span><span class="p">)</span>
+    <span class="n">activate_zone</span> <span class="o">=</span> <span class="n">_get_activate_zones_command</span><span class="p">([</span><span class="n">export_settings</span><span class="o">.</span><span class="n">zone_number</span><span class="p">])</span>
+    <span class="n">frame_size</span> <span class="o">=</span> <span class="n">_get_frame_size_commands</span><span class="p">(</span><span class="n">frame_settings</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="n">frame_settings</span><span class="o">.</span><span class="n">height</span><span class="p">)</span>
+    <span class="n">export</span> <span class="o">=</span> <span class="n">_get_export_command</span><span class="p">(</span><span class="n">export_settings</span><span class="o">.</span><span class="n">exportfname</span><span class="p">,</span> <span class="n">export_settings</span><span class="o">.</span><span class="n">imagewidth</span><span class="p">)</span>
+    <span class="n">delete_zone</span> <span class="o">=</span> <span class="n">_get_delete_zones_command</span><span class="p">([</span><span class="n">export_settings</span><span class="o">.</span><span class="n">zone_number</span><span class="p">])</span>
+    <span class="n">go_to_3d</span> <span class="o">=</span> <span class="n">_get_go_to_3d_command</span><span class="p">()</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">extract_slice</span> <span class="o">+</span> <span class="n">show_contour</span> <span class="o">+</span> <span class="n">go_to_2d</span> <span class="o">+</span> <span class="n">axis_font_settings</span> <span class="o">+</span> <span class="n">activate_zone</span> <span class="o">+</span> <span class="n">frame_size</span> <span class="o">+</span> <span class="n">export</span> <span class="o">+</span> \
+             <span class="n">delete_zone</span> <span class="o">+</span> <span class="n">go_to_3d</span>
+    <span class="k">return</span> <span class="n">result</span>
+
+
+<div class="viewcode-block" id="PictureCreator"><a class="viewcode-back" href="../API reference.html#tecplot_lib.PictureCreator">[документация]</a><span class="k">class</span> <span class="nc">PictureCreator</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source_file</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">macro_filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">slice_settings</span><span class="p">:</span> <span class="n">SliceSettings</span><span class="p">,</span>
+                 <span class="n">level_settings</span><span class="p">:</span> <span class="n">LevelSettings</span><span class="p">,</span> <span class="n">legend_settings</span><span class="p">:</span> <span class="n">LegendSettings</span><span class="p">,</span> <span class="n">colormap_settings</span><span class="p">:</span> <span class="n">ColormapSettings</span><span class="p">,</span>
+                 <span class="n">axis_settings</span><span class="p">:</span> <span class="n">AxisSettings</span><span class="p">,</span> <span class="n">export_settings</span><span class="p">:</span> <span class="n">ExportSettings</span><span class="p">,</span> <span class="n">frame_settings</span><span class="p">:</span> <span class="n">FrameSettings</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param source_file: str \n</span>
+<span class="sd">            Имя файла с расширением .plt или .lay, содержащий данные для визуализации</span>
+<span class="sd">        :param macro_filename: tr \n</span>
+<span class="sd">            Имя файла, в который будет сохранен макрос</span>
+<span class="sd">        :param slice_settings: SliceSettings \n</span>
+<span class="sd">        :param level_settings: LevelSettings \n</span>
+<span class="sd">        :param legend_settings: LegendSettings \n</span>
+<span class="sd">        :param colormap_settings: ColorMap \n</span>
+<span class="sd">        :param axis_settings: AxisSettings \n</span>
+<span class="sd">        :param export_settings: ExportSettings \n</span>
+<span class="sd">        :param frame_settings: FrameSettings \n</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">source_file</span> <span class="o">=</span> <span class="n">source_file</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">macro_filename</span> <span class="o">=</span> <span class="n">macro_filename</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">slice_settings</span> <span class="o">=</span> <span class="n">slice_settings</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">level_settings</span> <span class="o">=</span> <span class="n">level_settings</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">legend_settings</span> <span class="o">=</span> <span class="n">legend_settings</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">colormap_settings</span> <span class="o">=</span> <span class="n">colormap_settings</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">axis_settings</span> <span class="o">=</span> <span class="n">axis_settings</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">export_settings</span> <span class="o">=</span> <span class="n">export_settings</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frame_settings</span> <span class="o">=</span> <span class="n">frame_settings</span>
+
+    <span class="k">def</span> <span class="nf">_get_slice_settings_macro</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">_get_slice_setting_macro</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">slice_settings</span><span class="o">.</span><span class="n">slice_type</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">slice_settings</span><span class="o">.</span><span class="n">position</span><span class="p">,</span>
+                                        <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">slice_settings</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_get_level_settings_macro</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">_get_levels_setting_macro</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">level_settings</span><span class="o">.</span><span class="n">variable_number</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">level_settings</span><span class="o">.</span><span class="n">min_level</span><span class="p">,</span>
+                                         <span class="bp">self</span><span class="o">.</span><span class="n">level_settings</span><span class="o">.</span><span class="n">max_level</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">level_settings</span><span class="o">.</span><span class="n">num_levels</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_get_legend_settings_macro</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">_get_legend_settings_macro</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">legend_settings</span><span class="o">.</span><span class="n">xy_position</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">legend_settings</span><span class="o">.</span><span class="n">rowspacing</span><span class="p">,</span>
+                                          <span class="bp">self</span><span class="o">.</span><span class="n">legend_settings</span><span class="o">.</span><span class="n">auto_levelskip</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">legend_settings</span><span class="o">.</span><span class="n">isvertical</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_get_colormap_settings_macro</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">_get_colormap_settings_macro</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">colormap_settings</span><span class="o">.</span><span class="n">color_distribution</span><span class="p">,</span>
+                                            <span class="bp">self</span><span class="o">.</span><span class="n">colormap_settings</span><span class="o">.</span><span class="n">colormap_name</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">colormap_settings</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_get_create_picture_macro</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">_get_create_picture_macro</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">axis_settings</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">export_settings</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">frame_settings</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_get_legend_font_settings</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">_get_legend_font_settings</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">legend_settings</span><span class="o">.</span><span class="n">header_font</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">legend_settings</span><span class="o">.</span><span class="n">number_font</span><span class="p">)</span>
+
+<div class="viewcode-block" id="PictureCreator.run_creation"><a class="viewcode-back" href="../API reference.html#tecplot_lib.PictureCreator.run_creation">[документация]</a>    <span class="k">def</span> <span class="nf">run_creation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">source_file</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;.plt&#39;</span><span class="p">:</span>
+            <span class="n">open_file</span> <span class="o">=</span> <span class="n">get_open_data_file_command</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">source_file</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">open_file</span> <span class="o">=</span> <span class="n">get_open_layout_command</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">source_file</span><span class="p">)</span>
+        <span class="n">slice_settings</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_slice_settings_macro</span><span class="p">()</span>
+        <span class="n">level_settings</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_level_settings_macro</span><span class="p">()</span>
+        <span class="n">legend_settings</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_legend_settings_macro</span><span class="p">()</span>
+        <span class="n">legend_font_setting</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_legend_font_settings</span><span class="p">()</span>
+        <span class="n">colormap_settings</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_colormap_settings_macro</span><span class="p">()</span>
+        <span class="n">create_picture</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_create_picture_macro</span><span class="p">()</span>
+        <span class="n">macro</span> <span class="o">=</span> <span class="n">wrap_macro</span><span class="p">(</span><span class="n">open_file</span> <span class="o">+</span> <span class="n">slice_settings</span> <span class="o">+</span> <span class="n">level_settings</span> <span class="o">+</span> <span class="n">legend_settings</span> <span class="o">+</span> <span class="n">legend_font_setting</span> <span class="o">+</span>
+                           <span class="n">colormap_settings</span> <span class="o">+</span> <span class="n">create_picture</span><span class="p">)</span>
+        <span class="n">create_macro_file</span><span class="p">(</span><span class="n">macro</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">macro_filename</span><span class="p">)</span>
+        <span class="n">execute_macro</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">macro_filename</span><span class="p">)</span></div></div>
+
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="k">pass</span>
+    <span class="c1"># slice_settings = SliceSettings(SliceType.ARBITRARY, (0.1, 0.15, 0.1), normal=(0, 1, 0))</span>
+    <span class="c1"># legend_settings = LegendSettings(xy_position=(90, 45))</span>
+    <span class="c1"># levels_settings = LevelSettings(5, 0, 90, 10)</span>
+    <span class="c1"># colormap_settings = ColormapSettings(ColorDistribution.BANDED, ColorMap.MODERN)</span>
+    <span class="c1"># axis_settings = AxisSettings(0, 3, rect=(10, 10, 80, 40),</span>
+    <span class="c1">#                              xlim=(-0.1, 8.1), ylim=(-0.05, 0.4))</span>
+    <span class="c1"># export_settings = ExportSettings(2, r&#39;pictures\test.png&#39;)</span>
+    <span class="c1"># pic_creator = PictureCreator(r&#39;data_files\average_grid_density_sp_al.plt&#39;, &#39;macros\picture_creation.mcr&#39;,</span>
+    <span class="c1">#                              slice_settings, levels_settings, legend_settings, colormap_settings,</span>
+    <span class="c1">#                              axis_settings, export_settings)</span>
+    <span class="c1"># pic_creator.run_creation()</span>
+
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Быстрый поиск</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Искать" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Навигация</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="Алфавитный указатель"
+             >указатель</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Содержание модулей Python"
+             >модули</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Документация tecplot_lib </a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Код модуля</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, Alexander Zhigalkin.
+      Создано с помощью <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.1.
+    </div>
+  </body>
+</html>

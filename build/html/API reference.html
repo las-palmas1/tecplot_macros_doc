@@ -1,0 +1,740 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ru">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>API reference &#8212; Документация tecplot_lib </title>
+    
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/translations.js"></script>
+    <link rel="index" title="Алфавитный указатель" href="genindex.html" />
+    <link rel="search" title="Поиск" href="search.html" />
+    <link rel="next" title="test" href="test.html" />
+    <link rel="prev" title="Examples" href="examples.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Навигация</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="Алфавитный указатель"
+             accesskey="I">указатель</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Содержание модулей Python"
+             >модули</a> |</li>
+        <li class="right" >
+          <a href="test.html" title="test"
+             accesskey="N">вперёд</a> |</li>
+        <li class="right" >
+          <a href="examples.html" title="Examples"
+             accesskey="P">назад</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Документация tecplot_lib </a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-tecplot_lib">
+<span id="api-reference"></span><span id="api-ref-label"></span><h1>API reference<a class="headerlink" href="#module-tecplot_lib" title="Ссылка на этот заголовок">¶</a></h1>
+<dl class="class">
+<dt id="tecplot_lib.AxisSettings">
+<em class="property">class </em><code class="descclassname">tecplot_lib.</code><code class="descname">AxisSettings</code><span class="sig-paren">(</span><em>x_axis_var: int</em>, <em>y_axis_var: int</em>, <em>rect: tuple = (10</em>, <em>10</em>, <em>90</em>, <em>90)</em>, <em>x_line_pos: float = 0</em>, <em>y_line_pos: float = 0</em>, <em>preserve_axis_length: bool = False</em>, <em>x_title_font: tecplot_lib.Font = &lt;tecplot_lib.Font object at 0x0000000007EF1B00&gt;</em>, <em>x_label_font: tecplot_lib.Font = &lt;tecplot_lib.Font object at 0x0000000007EF1B38&gt;</em>, <em>x_title_offset: float = 5.0</em>, <em>y_title_font: tecplot_lib.Font = &lt;tecplot_lib.Font object at 0x0000000007EF1B70&gt;</em>, <em>y_label_font: tecplot_lib.Font = &lt;tecplot_lib.Font object at 0x0000000007EF1BA8&gt;</em>, <em>y_title_offset: float = 5.0</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tecplot_lib.html#AxisSettings"><span class="viewcode-link">[исходный код]</span></a><a class="headerlink" href="#tecplot_lib.AxisSettings" title="Ссылка на это определение">¶</a></dt>
+<dd><blockquote>
+<div>Базовые классы: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Параметры:</th><td class="field-body"><ul class="first last simple">
+<li><strong>x_axis_var</strong> &#8211; <p>int</p>
+<p>номер переменной, откладываемая по горизонтальной оси, например, x_axis_var = 0</p>
+</li>
+<li><strong>y_axis_var</strong> &#8211; <p>int</p>
+<p>номер переменной, откладываемая по вертикальной оси</p>
+</li>
+<li><strong>rect</strong> &#8211; <p>tuple, optional</p>
+<p>определяет положение прямоугольника сетки на frame, rect=(x1, y1, x2, y2),
+по умолчанию rect=(10, 10, 90, 90)</p>
+</li>
+<li><strong>preserve_axis_length</strong> &#8211; <p>bool, optional</p>
+<p>Сохраняемость масштаба осей при изменении их диапазона</p>
+</li>
+<li><strong>x_line_pos</strong> &#8211; <p>float</p>
+<p>Позиция горизонтальной оси по вертикали</p>
+</li>
+<li><strong>y_line_pos</strong> &#8211; <p>float</p>
+<p>Позиция вертикальной оси по горизонтали</p>
+</li>
+<li><strong>x_title_font</strong> &#8211; <p>Font, optional</p>
+<p>экземпляр класса Font, содержащий настройки шрифта для заголовка оси x</p>
+</li>
+<li><strong>x_label_font</strong> &#8211; <p>Font, optional</p>
+<p>экземпляр класса Font, содержащий настройки шрифта для лэйблов оси x</p>
+</li>
+<li><strong>x_title_offset</strong> &#8211; <p>float, optional</p>
+<p>сдвиг заголовка оси x относсительно оси</p>
+</li>
+<li><strong>y_title_font</strong> &#8211; <p>Font, optional</p>
+<p>экземпляр класса Font, содержащий настройки шрифта для заголовка оси y</p>
+</li>
+<li><strong>y_label_font</strong> &#8211; <p>Font, optional</p>
+<p>экземпляр класса Font, содержащий настройки шрифта для лэйблов оси y</p>
+</li>
+<li><strong>y_title_offset</strong> &#8211; <p>int, optional</p>
+<p>сдвиг заголовка оси y относсительно оси</p>
+</li>
+<li><strong>kwargs</strong> &#8211; xlim и ylim (интервалы по осям x и y соотвественно), тип tuple; пример: xlim=(0,1), ylim=(1,2)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="tecplot_lib.ColorDistribution">
+<em class="property">class </em><code class="descclassname">tecplot_lib.</code><code class="descname">ColorDistribution</code><a class="reference internal" href="_modules/tecplot_lib.html#ColorDistribution"><span class="viewcode-link">[исходный код]</span></a><a class="headerlink" href="#tecplot_lib.ColorDistribution" title="Ссылка на это определение">¶</a></dt>
+<dd><blockquote>
+<div>Базовые классы: <code class="xref py py-class docutils literal"><span class="pre">enum.Enum</span></code></div></blockquote>
+<p>An enumeration.</p>
+<dl class="attribute">
+<dt id="tecplot_lib.ColorDistribution.BANDED">
+<code class="descname">BANDED</code><em class="property"> = 0</em><a class="headerlink" href="#tecplot_lib.ColorDistribution.BANDED" title="Ссылка на это определение">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="tecplot_lib.ColorDistribution.CONTINUOUS">
+<code class="descname">CONTINUOUS</code><em class="property"> = 1</em><a class="headerlink" href="#tecplot_lib.ColorDistribution.CONTINUOUS" title="Ссылка на это определение">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="tecplot_lib.ColorMap">
+<em class="property">class </em><code class="descclassname">tecplot_lib.</code><code class="descname">ColorMap</code><a class="reference internal" href="_modules/tecplot_lib.html#ColorMap"><span class="viewcode-link">[исходный код]</span></a><a class="headerlink" href="#tecplot_lib.ColorMap" title="Ссылка на это определение">¶</a></dt>
+<dd><blockquote>
+<div>Базовые классы: <code class="xref py py-class docutils literal"><span class="pre">enum.Enum</span></code></div></blockquote>
+<p>An enumeration.</p>
+<dl class="attribute">
+<dt id="tecplot_lib.ColorMap.GRAY_SCALE">
+<code class="descname">GRAY_SCALE</code><em class="property"> = 'GrayScale'</em><a class="headerlink" href="#tecplot_lib.ColorMap.GRAY_SCALE" title="Ссылка на это определение">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="tecplot_lib.ColorMap.MODERN">
+<code class="descname">MODERN</code><em class="property"> = &quot;'Modern'&quot;</em><a class="headerlink" href="#tecplot_lib.ColorMap.MODERN" title="Ссылка на это определение">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="tecplot_lib.ColorMap.SMALL_RAINBOW">
+<code class="descname">SMALL_RAINBOW</code><em class="property"> = &quot;'Small Rainbow'&quot;</em><a class="headerlink" href="#tecplot_lib.ColorMap.SMALL_RAINBOW" title="Ссылка на это определение">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="tecplot_lib.ColorMap.WILD">
+<code class="descname">WILD</code><em class="property"> = &quot;'Wild'&quot;</em><a class="headerlink" href="#tecplot_lib.ColorMap.WILD" title="Ссылка на это определение">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="tecplot_lib.ColormapSettings">
+<em class="property">class </em><code class="descclassname">tecplot_lib.</code><code class="descname">ColormapSettings</code><span class="sig-paren">(</span><em>color_distribution: tecplot_lib.ColorDistribution = &lt;ColorDistribution.BANDED: 0&gt;</em>, <em>colormap_name: tecplot_lib.ColorMap = &lt;ColorMap.MODERN: &quot;'Modern'&quot;&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tecplot_lib.html#ColormapSettings"><span class="viewcode-link">[исходный код]</span></a><a class="headerlink" href="#tecplot_lib.ColormapSettings" title="Ссылка на это определение">¶</a></dt>
+<dd><blockquote>
+<div>Базовые классы: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Параметры:</th><td class="field-body"><ul class="first last simple">
+<li><strong>color_distribution</strong> &#8211; <p>ColorDistribution, optional</p>
+<p>распределения цвета, по умолчанию ColorDistribution.BANDED</p>
+</li>
+<li><strong>colormap_name</strong> &#8211; <p>ColorMap, optional</p>
+<p>цветовая схема, по умолчанию ColorMap.MODERN</p>
+</li>
+<li><strong>kwargs</strong> &#8211; color_max и color_min, если распределение цвета =  ColorDistribution.CONTINUOUS</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="tecplot_lib.DataType">
+<em class="property">class </em><code class="descclassname">tecplot_lib.</code><code class="descname">DataType</code><a class="reference internal" href="_modules/tecplot_lib.html#DataType"><span class="viewcode-link">[исходный код]</span></a><a class="headerlink" href="#tecplot_lib.DataType" title="Ссылка на это определение">¶</a></dt>
+<dd><blockquote>
+<div>Базовые классы: <code class="xref py py-class docutils literal"><span class="pre">enum.Enum</span></code></div></blockquote>
+<p>An enumeration.</p>
+<dl class="attribute">
+<dt id="tecplot_lib.DataType.BIT">
+<code class="descname">BIT</code><em class="property"> = 5</em><a class="headerlink" href="#tecplot_lib.DataType.BIT" title="Ссылка на это определение">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="tecplot_lib.DataType.BYTE">
+<code class="descname">BYTE</code><em class="property"> = 3</em><a class="headerlink" href="#tecplot_lib.DataType.BYTE" title="Ссылка на это определение">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="tecplot_lib.DataType.DOUBLE">
+<code class="descname">DOUBLE</code><em class="property"> = 2</em><a class="headerlink" href="#tecplot_lib.DataType.DOUBLE" title="Ссылка на это определение">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="tecplot_lib.DataType.LONGINT">
+<code class="descname">LONGINT</code><em class="property"> = 4</em><a class="headerlink" href="#tecplot_lib.DataType.LONGINT" title="Ссылка на это определение">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="tecplot_lib.DataType.SHORTINT">
+<code class="descname">SHORTINT</code><em class="property"> = 1</em><a class="headerlink" href="#tecplot_lib.DataType.SHORTINT" title="Ссылка на это определение">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="tecplot_lib.DataType.SINGLE">
+<code class="descname">SINGLE</code><em class="property"> = 0</em><a class="headerlink" href="#tecplot_lib.DataType.SINGLE" title="Ссылка на это определение">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="tecplot_lib.ExportSettings">
+<em class="property">class </em><code class="descclassname">tecplot_lib.</code><code class="descname">ExportSettings</code><span class="sig-paren">(</span><em>zone_number: int</em>, <em>exportfname: str</em>, <em>imagewidth=1200</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tecplot_lib.html#ExportSettings"><span class="viewcode-link">[исходный код]</span></a><a class="headerlink" href="#tecplot_lib.ExportSettings" title="Ссылка на это определение">¶</a></dt>
+<dd><blockquote>
+<div>Базовые классы: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Параметры:</th><td class="field-body"><ul class="first last simple">
+<li><strong>zone_number</strong> &#8211; <p>int</p>
+<p>номер зоны, в которую будут извлечены данные среза, (на единицу большего общего
+количества зон)</p>
+</li>
+<li><strong>exportfname</strong> &#8211; <p>str</p>
+<p>имя файла, в который будет осуществляться экспорт</p>
+</li>
+<li><strong>imagewidth</strong> &#8211; <p>int, optional</p>
+<p>ширина картинки</p>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="tecplot_lib.Font">
+<em class="property">class </em><code class="descclassname">tecplot_lib.</code><code class="descname">Font</code><span class="sig-paren">(</span><em>font_family='Helvetica'</em>, <em>is_bold=False</em>, <em>is_italic=False</em>, <em>height=3.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tecplot_lib.html#Font"><span class="viewcode-link">[исходный код]</span></a><a class="headerlink" href="#tecplot_lib.Font" title="Ссылка на это определение">¶</a></dt>
+<dd><blockquote>
+<div>Базовые классы: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></div></blockquote>
+</dd></dl>
+
+<dl class="class">
+<dt id="tecplot_lib.FrameSettings">
+<em class="property">class </em><code class="descclassname">tecplot_lib.</code><code class="descname">FrameSettings</code><span class="sig-paren">(</span><em>width: float = 9</em>, <em>height: float = 8</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tecplot_lib.html#FrameSettings"><span class="viewcode-link">[исходный код]</span></a><a class="headerlink" href="#tecplot_lib.FrameSettings" title="Ссылка на это определение">¶</a></dt>
+<dd><blockquote>
+<div>Базовые классы: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Параметры:</th><td class="field-body"><ul class="first last simple">
+<li><strong>width</strong> &#8211; <p>float, optional</p>
+<p>Ширина фрейма</p>
+</li>
+<li><strong>height</strong> &#8211; <p>float, optional</p>
+<p>Высота фрейма</p>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="tecplot_lib.LegendSettings">
+<em class="property">class </em><code class="descclassname">tecplot_lib.</code><code class="descname">LegendSettings</code><span class="sig-paren">(</span><em>xy_position: tuple = (95</em>, <em>80)</em>, <em>rowspacing: float = 1.2</em>, <em>auto_levelskip: int = 1</em>, <em>isvertical: bool = True</em>, <em>header_font: tecplot_lib.Font = &lt;tecplot_lib.Font object at 0x0000000007EF1A90&gt;</em>, <em>number_font: tecplot_lib.Font = &lt;tecplot_lib.Font object at 0x0000000007EF1AC8&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tecplot_lib.html#LegendSettings"><span class="viewcode-link">[исходный код]</span></a><a class="headerlink" href="#tecplot_lib.LegendSettings" title="Ссылка на это определение">¶</a></dt>
+<dd><blockquote>
+<div>Базовые классы: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Параметры:</th><td class="field-body"><ul class="first last simple">
+<li><strong>xy_position</strong> &#8211; <p>tuple, optional</p>
+<p>позиция легенды в координатах экрана, по умолчанию (95, 80)</p>
+</li>
+<li><strong>rowspacing</strong> &#8211; <p>float, optional</p>
+<p>интервал между строками, по умолчанию 1.2</p>
+</li>
+<li><strong>auto_levelskip</strong> &#8211; <p>int, optional</p>
+<p>пропуск уровней, по умолчанию 1 (без пропуска)</p>
+</li>
+<li><strong>isvertical</strong> &#8211; <p>bool</p>
+<p>параметр, определяющей вертикальность легенды, по умолчанию True</p>
+</li>
+<li><strong>header_font</strong> &#8211; <p>Font, optional</p>
+<p>экземпляр класса Font, содержащий настройки шрифта для заголовка легенды</p>
+</li>
+<li><strong>number_font</strong> &#8211; <p>Font, optional</p>
+<p>экземпляр класса Font, содержащий настройки шрифта для лэйблов легенды</p>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="tecplot_lib.LevelSettings">
+<em class="property">class </em><code class="descclassname">tecplot_lib.</code><code class="descname">LevelSettings</code><span class="sig-paren">(</span><em>variable_number: int</em>, <em>min_level</em>, <em>max_level</em>, <em>num_levels: int</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tecplot_lib.html#LevelSettings"><span class="viewcode-link">[исходный код]</span></a><a class="headerlink" href="#tecplot_lib.LevelSettings" title="Ссылка на это определение">¶</a></dt>
+<dd><blockquote>
+<div>Базовые классы: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Параметры:</th><td class="field-body"><ul class="first last simple">
+<li><strong>variable_number</strong> &#8211; <p>int</p>
+<p>номер отображаемой переменной переменной</p>
+</li>
+<li><strong>min_level</strong> &#8211; <p>float</p>
+<p>нижняя граница отображаемого интервала значений переменной</p>
+</li>
+<li><strong>max_level</strong> &#8211; <p>float</p>
+<p>верхняя граница отображаемого интервала значений переменной</p>
+</li>
+<li><strong>num_levels</strong> &#8211; int             число уровней в легенде</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="tecplot_lib.LineDataExtractor">
+<em class="property">class </em><code class="descclassname">tecplot_lib.</code><code class="descname">LineDataExtractor</code><span class="sig-paren">(</span><em>datafiles_dir, output_dir, polylines_list: typing.List[typing.List[tecplot_lib.PolyLine]], macro_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tecplot_lib.html#LineDataExtractor"><span class="viewcode-link">[исходный код]</span></a><a class="headerlink" href="#tecplot_lib.LineDataExtractor" title="Ссылка на это определение">¶</a></dt>
+<dd><blockquote>
+<div>Базовые классы: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></div></blockquote>
+<p>Обеспечивает возможность создания макроса, извелающего из .plt файла данные по набору полилиний и
+сохраняющего эти данные в текстовые файлы с расширением .dat</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Параметры:</th><td class="field-body"><ul class="first last simple">
+<li><strong>datafiles_dir</strong> &#8211; <p>str</p>
+<p>Имя директории, в которой располагаются .plt или файлы</p>
+</li>
+<li><strong>output_dir</strong> &#8211; <p>str</p>
+<p>Имя директории для извлеченных данных</p>
+</li>
+<li><strong>polylines_list</strong> &#8211; <p>List[List[PolyLine]]</p>
+<p>список списков полилиний, по которым будут извелкаться данные; каждый список из данного списка 
+соответствует набору полилиний для каждого файла с данными из папки datafiles_dir</p>
+</li>
+<li><strong>macro_name</strong> &#8211; <p>str</p>
+<p>имя макроса, под которым он будет сохранен</p>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="tecplot_lib.LineDataExtractor.run_extraction">
+<code class="descname">run_extraction</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tecplot_lib.html#LineDataExtractor.run_extraction"><span class="viewcode-link">[исходный код]</span></a><a class="headerlink" href="#tecplot_lib.LineDataExtractor.run_extraction" title="Ссылка на это определение">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="tecplot_lib.LineDataLoader">
+<em class="property">class </em><code class="descclassname">tecplot_lib.</code><code class="descname">LineDataLoader</code><span class="sig-paren">(</span><em>data_dirname: str</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tecplot_lib.html#LineDataLoader"><span class="viewcode-link">[исходный код]</span></a><a class="headerlink" href="#tecplot_lib.LineDataLoader" title="Ссылка на это определение">¶</a></dt>
+<dd><blockquote>
+<div>Базовые классы: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></div></blockquote>
+<p>Позволяет считать извлеченные по полилиниям данные  из всех файлов, содержащихся в папке, путь к которой 
+хранится в поле data_dirname, и записать данные из каждого файла в экземпляр класса Pandas.DataFrame, доступ к 
+списку которых осуществляется через поле frames</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Параметры:</th><td class="field-body"><strong>data_dirname</strong> &#8211; <p>str</p>
+<p>имя папки, содержащей файлы с извлеченными данными</p>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="tecplot_lib.LineDataLoader.load">
+<code class="descname">load</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tecplot_lib.html#LineDataLoader.load"><span class="viewcode-link">[исходный код]</span></a><a class="headerlink" href="#tecplot_lib.LineDataLoader.load" title="Ссылка на это определение">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="tecplot_lib.LoaderType">
+<em class="property">class </em><code class="descclassname">tecplot_lib.</code><code class="descname">LoaderType</code><a class="reference internal" href="_modules/tecplot_lib.html#LoaderType"><span class="viewcode-link">[исходный код]</span></a><a class="headerlink" href="#tecplot_lib.LoaderType" title="Ссылка на это определение">¶</a></dt>
+<dd><blockquote>
+<div>Базовые классы: <code class="xref py py-class docutils literal"><span class="pre">enum.Enum</span></code></div></blockquote>
+<p>An enumeration.</p>
+<dl class="attribute">
+<dt id="tecplot_lib.LoaderType.CFX">
+<code class="descname">CFX</code><em class="property"> = 1</em><a class="headerlink" href="#tecplot_lib.LoaderType.CFX" title="Ссылка на это определение">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="tecplot_lib.LoaderType.TECPLOT">
+<code class="descname">TECPLOT</code><em class="property"> = 0</em><a class="headerlink" href="#tecplot_lib.LoaderType.TECPLOT" title="Ссылка на это определение">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="tecplot_lib.PictureCreator">
+<em class="property">class </em><code class="descclassname">tecplot_lib.</code><code class="descname">PictureCreator</code><span class="sig-paren">(</span><em>source_file: str</em>, <em>macro_filename: str</em>, <em>slice_settings: tecplot_lib.SliceSettings</em>, <em>level_settings: tecplot_lib.LevelSettings</em>, <em>legend_settings: tecplot_lib.LegendSettings</em>, <em>colormap_settings: tecplot_lib.ColormapSettings</em>, <em>axis_settings: tecplot_lib.AxisSettings</em>, <em>export_settings: tecplot_lib.ExportSettings</em>, <em>frame_settings: tecplot_lib.FrameSettings</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tecplot_lib.html#PictureCreator"><span class="viewcode-link">[исходный код]</span></a><a class="headerlink" href="#tecplot_lib.PictureCreator" title="Ссылка на это определение">¶</a></dt>
+<dd><blockquote>
+<div>Базовые классы: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Параметры:</th><td class="field-body"><ul class="first last simple">
+<li><strong>source_file</strong> &#8211; <p>str</p>
+<p>Имя файла с расширением .plt или .lay, содержащий данные для визуализации</p>
+</li>
+<li><strong>macro_filename</strong> &#8211; <p>tr</p>
+<p>Имя файла, в который будет сохранен макрос</p>
+</li>
+<li><strong>slice_settings</strong> &#8211; SliceSettings</li>
+<li><strong>level_settings</strong> &#8211; LevelSettings</li>
+<li><strong>legend_settings</strong> &#8211; LegendSettings</li>
+<li><strong>colormap_settings</strong> &#8211; ColorMap</li>
+<li><strong>axis_settings</strong> &#8211; AxisSettings</li>
+<li><strong>export_settings</strong> &#8211; ExportSettings</li>
+<li><strong>frame_settings</strong> &#8211; FrameSettings</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="tecplot_lib.PictureCreator.run_creation">
+<code class="descname">run_creation</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tecplot_lib.html#PictureCreator.run_creation"><span class="viewcode-link">[исходный код]</span></a><a class="headerlink" href="#tecplot_lib.PictureCreator.run_creation" title="Ссылка на это определение">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="tecplot_lib.Point">
+<em class="property">class </em><code class="descclassname">tecplot_lib.</code><code class="descname">Point</code><span class="sig-paren">(</span><em>x</em>, <em>y</em>, <em>z</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tecplot_lib.html#Point"><span class="viewcode-link">[исходный код]</span></a><a class="headerlink" href="#tecplot_lib.Point" title="Ссылка на это определение">¶</a></dt>
+<dd><blockquote>
+<div>Базовые классы: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></div></blockquote>
+</dd></dl>
+
+<dl class="class">
+<dt id="tecplot_lib.PolyLine">
+<em class="property">class </em><code class="descclassname">tecplot_lib.</code><code class="descname">PolyLine</code><span class="sig-paren">(</span><em>nodes: typing.List[tecplot_lib.Point], numpoints</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tecplot_lib.html#PolyLine"><span class="viewcode-link">[исходный код]</span></a><a class="headerlink" href="#tecplot_lib.PolyLine" title="Ссылка на это определение">¶</a></dt>
+<dd><blockquote>
+<div>Базовые классы: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></div></blockquote>
+</dd></dl>
+
+<dl class="class">
+<dt id="tecplot_lib.SliceSettings">
+<em class="property">class </em><code class="descclassname">tecplot_lib.</code><code class="descname">SliceSettings</code><span class="sig-paren">(</span><em>slice_type: tecplot_lib.SliceType</em>, <em>position: tuple</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tecplot_lib.html#SliceSettings"><span class="viewcode-link">[исходный код]</span></a><a class="headerlink" href="#tecplot_lib.SliceSettings" title="Ссылка на это определение">¶</a></dt>
+<dd><blockquote>
+<div>Базовые классы: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Параметры:</th><td class="field-body"><ul class="first last simple">
+<li><strong>slice_type</strong> &#8211; <p>SliceType</p>
+<p>определяет ориентацию секущей плоскости</p>
+</li>
+<li><strong>position</strong> &#8211; <p>tuple</p>
+<p>кортеж из трех элементов, определяющих координаты точки, черех которую 
+проходит секущая плоскость</p>
+</li>
+<li><strong>kwargs</strong> &#8211; 1. normal - кортеж, задающий координаты нормали к секущей плоскости, необходимо задать, если
+slice_type = SliceType.ARBITRARY</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="tecplot_lib.SliceType">
+<em class="property">class </em><code class="descclassname">tecplot_lib.</code><code class="descname">SliceType</code><a class="reference internal" href="_modules/tecplot_lib.html#SliceType"><span class="viewcode-link">[исходный код]</span></a><a class="headerlink" href="#tecplot_lib.SliceType" title="Ссылка на это определение">¶</a></dt>
+<dd><blockquote>
+<div>Базовые классы: <code class="xref py py-class docutils literal"><span class="pre">enum.Enum</span></code></div></blockquote>
+<p>An enumeration.</p>
+<dl class="attribute">
+<dt id="tecplot_lib.SliceType.ARBITRARY">
+<code class="descname">ARBITRARY</code><em class="property"> = 6</em><a class="headerlink" href="#tecplot_lib.SliceType.ARBITRARY" title="Ссылка на это определение">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="tecplot_lib.SliceType.IPLANES">
+<code class="descname">IPLANES</code><em class="property"> = 3</em><a class="headerlink" href="#tecplot_lib.SliceType.IPLANES" title="Ссылка на это определение">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="tecplot_lib.SliceType.JPLANES">
+<code class="descname">JPLANES</code><em class="property"> = 4</em><a class="headerlink" href="#tecplot_lib.SliceType.JPLANES" title="Ссылка на это определение">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="tecplot_lib.SliceType.KPLANES">
+<code class="descname">KPLANES</code><em class="property"> = 5</em><a class="headerlink" href="#tecplot_lib.SliceType.KPLANES" title="Ссылка на это определение">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="tecplot_lib.SliceType.XPLANES">
+<code class="descname">XPLANES</code><em class="property"> = 0</em><a class="headerlink" href="#tecplot_lib.SliceType.XPLANES" title="Ссылка на это определение">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="tecplot_lib.SliceType.YPLANES">
+<code class="descname">YPLANES</code><em class="property"> = 1</em><a class="headerlink" href="#tecplot_lib.SliceType.YPLANES" title="Ссылка на это определение">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="tecplot_lib.SliceType.ZPLANES">
+<code class="descname">ZPLANES</code><em class="property"> = 2</em><a class="headerlink" href="#tecplot_lib.SliceType.ZPLANES" title="Ссылка на это определение">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="tecplot_lib.create_macro_file">
+<code class="descclassname">tecplot_lib.</code><code class="descname">create_macro_file</code><span class="sig-paren">(</span><em>macros: str</em>, <em>filename: str</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tecplot_lib.html#create_macro_file"><span class="viewcode-link">[исходный код]</span></a><a class="headerlink" href="#tecplot_lib.create_macro_file" title="Ссылка на это определение">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Параметры:</th><td class="field-body"><ul class="first simple">
+<li><strong>macros</strong> &#8211; <p>str</p>
+<p>Строка, содержащая набор команд на скриптовом языке TecPlot</p>
+</li>
+<li><strong>filename</strong> &#8211; <p>str</p>
+<p>Имя файла, в который будет сохранен макрос</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Результат:</th><td class="field-body"><p class="first last"></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="tecplot_lib.execute_macro">
+<code class="descclassname">tecplot_lib.</code><code class="descname">execute_macro</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tecplot_lib.html#execute_macro"><span class="viewcode-link">[исходный код]</span></a><a class="headerlink" href="#tecplot_lib.execute_macro" title="Ссылка на это определение">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="tecplot_lib.get_alterdata_command">
+<code class="descclassname">tecplot_lib.</code><code class="descname">get_alterdata_command</code><span class="sig-paren">(</span><em>equation: str</em>, <em>ignored_divided_by_zero=False</em>, <em>data_type: tecplot_lib.DataType = &lt;DataType.SINGLE: 0&gt;</em><span class="sig-paren">)</span> &rarr; str<a class="reference internal" href="_modules/tecplot_lib.html#get_alterdata_command"><span class="viewcode-link">[исходный код]</span></a><a class="headerlink" href="#tecplot_lib.get_alterdata_command" title="Ссылка на это определение">¶</a></dt>
+<dd><p>Возвращает строку, содержащую набор команд на скриптовом языке TecPlot
+:param equation: str</p>
+<blockquote>
+<div>Строка, содержащее уравнение для TecPlot</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Параметры:</th><td class="field-body"><ul class="first simple">
+<li><strong>ignored_divided_by_zero</strong> &#8211; bool</li>
+<li><strong>data_type</strong> &#8211; DataType</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Результат:</th><td class="field-body"><p class="first last">str</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="tecplot_lib.get_open_data_file_command">
+<code class="descclassname">tecplot_lib.</code><code class="descname">get_open_data_file_command</code><span class="sig-paren">(</span><em>filename: str</em>, <em>loader_type: tecplot_lib.LoaderType = &lt;LoaderType.TECPLOT: 0&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tecplot_lib.html#get_open_data_file_command"><span class="viewcode-link">[исходный код]</span></a><a class="headerlink" href="#tecplot_lib.get_open_data_file_command" title="Ссылка на это определение">¶</a></dt>
+<dd><p>Фукция возвращает строку, содержащую набор команд на скриптовом языке TecPlot для 
+открытия файла с расширением .plt или .res</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Параметры:</th><td class="field-body"><ul class="first simple">
+<li><strong>filename</strong> &#8211; <p>str</p>
+<p>Путь к файлу с расширенем .plt</p>
+</li>
+<li><strong>loader_type</strong> &#8211; <p>LoaderType</p>
+<p>Тип загрузчика данных</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Результат:</th><td class="field-body"><p class="first last">str</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="tecplot_lib.get_open_layout_command">
+<code class="descclassname">tecplot_lib.</code><code class="descname">get_open_layout_command</code><span class="sig-paren">(</span><em>filename: str</em><span class="sig-paren">)</span> &rarr; str<a class="reference internal" href="_modules/tecplot_lib.html#get_open_layout_command"><span class="viewcode-link">[исходный код]</span></a><a class="headerlink" href="#tecplot_lib.get_open_layout_command" title="Ссылка на это определение">¶</a></dt>
+<dd><p>Фукция возвращает строку, содержащую набор команд на скриптовом языке TecPlot для 
+открытия файла с расширением .lay</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Параметры:</th><td class="field-body"><strong>filename</strong> &#8211; <p>str</p>
+<p>Путь к файлу с расширенем .lay</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Результат:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="tecplot_lib.get_save_layout_command">
+<code class="descclassname">tecplot_lib.</code><code class="descname">get_save_layout_command</code><span class="sig-paren">(</span><em>filename: str</em><span class="sig-paren">)</span> &rarr; str<a class="reference internal" href="_modules/tecplot_lib.html#get_save_layout_command"><span class="viewcode-link">[исходный код]</span></a><a class="headerlink" href="#tecplot_lib.get_save_layout_command" title="Ссылка на это определение">¶</a></dt>
+<dd><p>Фукция возвращает строку, содержащую набор команд на скриптовом языке TecPlot для 
+сохранения файла с расширением .lay или .plt</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Параметры:</th><td class="field-body"><strong>filename</strong> &#8211; <p>str</p>
+<p>Путь к файлу с расширенем .lay</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Результат:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="tecplot_lib.get_write_data_set_command">
+<code class="descclassname">tecplot_lib.</code><code class="descname">get_write_data_set_command</code><span class="sig-paren">(</span><em>filename: str</em><span class="sig-paren">)</span> &rarr; str<a class="reference internal" href="_modules/tecplot_lib.html#get_write_data_set_command"><span class="viewcode-link">[исходный код]</span></a><a class="headerlink" href="#tecplot_lib.get_write_data_set_command" title="Ссылка на это определение">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Параметры:</th><td class="field-body"><strong>filename</strong> &#8211; <p>str</p>
+<p>имя файла с расширением .plt, в который будут сохранены данные</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Результат:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="tecplot_lib.wrap_macro">
+<code class="descclassname">tecplot_lib.</code><code class="descname">wrap_macro</code><span class="sig-paren">(</span><em>macro_body: str</em><span class="sig-paren">)</span> &rarr; str<a class="reference internal" href="_modules/tecplot_lib.html#wrap_macro"><span class="viewcode-link">[исходный код]</span></a><a class="headerlink" href="#tecplot_lib.wrap_macro" title="Ссылка на это определение">¶</a></dt>
+<dd><p>Добавляет обязательные команды к конек и начало макроса
+:param macro_body: str
+:return: str</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Предыдущий раздел</h4>
+  <p class="topless"><a href="examples.html"
+                        title="предыдущая глава">Examples</a></p>
+  <h4>Следующий раздел</h4>
+  <p class="topless"><a href="test.html"
+                        title="следующая глава">test</a></p>
+  <div role="note" aria-label="source link">
+    <h3>Эта страница</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/API reference.rst.txt"
+            rel="nofollow">Исходный текст</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Быстрый поиск</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Искать" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Навигация</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="Алфавитный указатель"
+             >указатель</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Содержание модулей Python"
+             >модули</a> |</li>
+        <li class="right" >
+          <a href="test.html" title="test"
+             >вперёд</a> |</li>
+        <li class="right" >
+          <a href="examples.html" title="Examples"
+             >назад</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Документация tecplot_lib </a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, Alexander Zhigalkin.
+      Создано с помощью <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.1.
+    </div>
+  </body>
+</html>

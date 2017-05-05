@@ -1,0 +1,281 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ru">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Examples &#8212; Документация tecplot_lib </title>
+    
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/translations.js"></script>
+    <link rel="index" title="Алфавитный указатель" href="genindex.html" />
+    <link rel="search" title="Поиск" href="search.html" />
+    <link rel="next" title="API reference" href="API reference.html" />
+    <link rel="prev" title="Introduction" href="introduction.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Навигация</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="Алфавитный указатель"
+             accesskey="I">указатель</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Содержание модулей Python"
+             >модули</a> |</li>
+        <li class="right" >
+          <a href="API reference.html" title="API reference"
+             accesskey="N">вперёд</a> |</li>
+        <li class="right" >
+          <a href="introduction.html" title="Introduction"
+             accesskey="P">назад</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Документация tecplot_lib </a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="examples">
+<h1>Examples<a class="headerlink" href="#examples" title="Ссылка на этот заголовок">¶</a></h1>
+<p>В данном разделе будет представлен пример пост-процессинга результатов расчета в CFX сужающегося канала.
+На входе и на выходе был задан перепад давлений. По бокам и снизу - условие симметрии, сверху - гладкая стенка без проскальзывания.
+В качестве среды использовался воздух. Геометрия представлена на рисунке ниже.</p>
+<div class="figure align-center" id="id5">
+<a class="reference internal image-reference" href="_images/geometry.png"><img alt="_images/geometry.png" src="_images/geometry.png" style="width: 623.0px; height: 377.5px;" /></a>
+<p class="caption"><span class="caption-text">Геометрия рассчитанного в CFX канала.</span></p>
+</div>
+<div class="section" id="cfx-tecplot">
+<h2>Перевод файлов CFX в формат TecPlot<a class="headerlink" href="#cfx-tecplot" title="Ссылка на этот заголовок">¶</a></h2>
+<p>Осуществляется с помощью функции <a class="reference internal" href="API reference.html#tecplot_lib.get_open_data_file_command" title="tecplot_lib.get_open_data_file_command"><code class="xref any py py-func docutils literal"><span class="pre">get_open_data_file_command</span></code></a>, возвращающей команду,
+открывающую файл с данными, и с помощью функции <a class="reference internal" href="API reference.html#tecplot_lib.get_write_data_set_command" title="tecplot_lib.get_write_data_set_command"><code class="xref any py py-func docutils literal"><span class="pre">get_write_data_set_command</span></code></a>, возвращающей команду, сохраняющую
+текущий файл в формате .plt.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">tecplot_lib</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="c1"># имя директории с файлами .res</span>
+<span class="n">cfx_dir</span> <span class="o">=</span> <span class="s1">&#39;cfx_res_files&#39;</span>
+<span class="c1"># имя директории с файлами данных TecPlot</span>
+<span class="n">tecplot_dir</span> <span class="o">=</span> <span class="s1">&#39;tecplot_data_files&#39;</span>
+<span class="c1"># имя директории с файлами максросов</span>
+<span class="n">macros_dir</span> <span class="o">=</span> <span class="s1">&#39;macros&#39;</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="c1"># строка, содержащая команду на языке TecPlot, открывающую файл .res</span>
+    <span class="n">open_cfx</span> <span class="o">=</span> <span class="n">tecplot_lib</span><span class="o">.</span><span class="n">get_open_data_file_command</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cfx_dir</span><span class="p">,</span> <span class="s1">&#39;CFX_001.res&#39;</span><span class="p">),</span> <span class="n">tecplot_lib</span><span class="o">.</span><span class="n">LoaderType</span><span class="o">.</span><span class="n">CFX</span><span class="p">)</span>
+    <span class="c1"># строка, содержащая команду, сохраняющую текущий файл</span>
+    <span class="n">save_as_plt</span> <span class="o">=</span> <span class="n">tecplot_lib</span><span class="o">.</span><span class="n">get_write_data_set_command</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tecplot_dir</span><span class="p">,</span> <span class="s1">&#39;example.plt&#39;</span><span class="p">))</span>
+    <span class="c1"># строка, содержащий макрос из двух вышеполученных команд</span>
+    <span class="n">macros</span> <span class="o">=</span> <span class="n">tecplot_lib</span><span class="o">.</span><span class="n">wrap_macro</span><span class="p">(</span><span class="n">open_cfx</span> <span class="o">+</span> <span class="n">save_as_plt</span><span class="p">)</span>
+    <span class="c1"># создание файла с макросом</span>
+    <span class="n">tecplot_lib</span><span class="o">.</span><span class="n">create_macro_file</span><span class="p">(</span><span class="n">macros</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">macros_dir</span><span class="p">,</span> <span class="s1">&#39;tecplot_data_files_creation.mcr&#39;</span><span class="p">))</span>
+    <span class="c1"># запуск макроса</span>
+    <span class="n">tecplot_lib</span><span class="o">.</span><span class="n">execute_macro</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">macros_dir</span><span class="p">,</span> <span class="s1">&#39;tecplot_data_files_creation.mcr&#39;</span><span class="p">))</span>
+    <span class="c1"># результате выполнения скрипта в папке tecplot_data_files появится файл example.plt</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id1">
+<h2>Создание новых переменных<a class="headerlink" href="#id1" title="Ссылка на этот заголовок">¶</a></h2>
+<p>Осуществляется с помощью функции <a class="reference internal" href="API reference.html#tecplot_lib.get_alterdata_command" title="tecplot_lib.get_alterdata_command"><code class="xref any py py-func docutils literal"><span class="pre">get_alterdata_command</span></code></a>. При этом сохранять файл данных с новыми переменными
+необходимо в формате .lay при помощи функции <a class="reference internal" href="API reference.html#tecplot_lib.get_save_layout_command" title="tecplot_lib.get_save_layout_command"><code class="xref any py py-func docutils literal"><span class="pre">get_save_layout_command</span></code></a>.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">tecplot_lib</span>
+<span class="kn">from</span> <span class="nn">tecplot_data_files_creation</span> <span class="k">import</span> <span class="n">tecplot_dir</span><span class="p">,</span> <span class="n">macros_dir</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="n">layouts_dir</span> <span class="o">=</span> <span class="s1">&#39;tecplot_layouts_dir&#39;</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="c1"># строка, содержащая команду, открывающую айл данных TecPlot</span>
+    <span class="n">open_file</span> <span class="o">=</span> <span class="n">tecplot_lib</span><span class="o">.</span><span class="n">get_open_data_file_command</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tecplot_dir</span><span class="p">,</span> <span class="s1">&#39;example.plt&#39;</span><span class="p">))</span>
+    <span class="c1"># строка, содержащая команду, создающую новую переменную</span>
+    <span class="n">alter_data</span> <span class="o">=</span> <span class="n">tecplot_lib</span><span class="o">.</span><span class="n">get_alterdata_command</span><span class="p">(</span><span class="n">equation</span><span class="o">=</span><span class="s1">&#39;{P_stag, Pa} = {Total Pressure}&#39;</span><span class="p">)</span>
+    <span class="c1"># строка, содержащая команду, сохранающую текущий файл данных TecPlot в формате .lay</span>
+    <span class="n">save_layout</span> <span class="o">=</span> <span class="n">tecplot_lib</span><span class="o">.</span><span class="n">get_save_layout_command</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">layouts_dir</span><span class="p">,</span> <span class="s1">&#39;example.lay&#39;</span><span class="p">))</span>
+    <span class="c1"># строка, содержащая весь макрос</span>
+    <span class="n">macro</span> <span class="o">=</span> <span class="n">tecplot_lib</span><span class="o">.</span><span class="n">wrap_macro</span><span class="p">(</span><span class="n">open_file</span> <span class="o">+</span> <span class="n">alter_data</span> <span class="o">+</span> <span class="n">save_layout</span><span class="p">)</span>
+    <span class="c1"># создание файла .mcr</span>
+    <span class="n">tecplot_lib</span><span class="o">.</span><span class="n">create_macro_file</span><span class="p">(</span><span class="n">macro</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">macros_dir</span><span class="p">,</span> <span class="s1">&#39;alter_data_creation.mcr&#39;</span><span class="p">))</span>
+    <span class="c1"># апуск макроса</span>
+    <span class="n">tecplot_lib</span><span class="o">.</span><span class="n">execute_macro</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">macros_dir</span><span class="p">,</span> <span class="s1">&#39;alter_data_creation.mcr&#39;</span><span class="p">))</span>
+    <span class="c1"># результате выполнения скрипта в папке tecplot_layouts_dir появится файл example.lay</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id2">
+<h2>Извлечение данных по полилинии<a class="headerlink" href="#id2" title="Ссылка на этот заголовок">¶</a></h2>
+<p>Осуществляется с помощью классов <a class="reference internal" href="API reference.html#tecplot_lib.Point" title="tecplot_lib.Point"><code class="xref any py py-class docutils literal"><span class="pre">Point</span></code></a>, <a class="reference internal" href="API reference.html#tecplot_lib.PolyLine" title="tecplot_lib.PolyLine"><code class="xref any py py-class docutils literal"><span class="pre">PolyLine</span></code></a>, <a class="reference internal" href="API reference.html#tecplot_lib.LineDataExtractor" title="tecplot_lib.LineDataExtractor"><code class="xref any py py-class docutils literal"><span class="pre">LineDataExtractor</span></code></a>. Сначала создаются экземпляры
+класса <a class="reference internal" href="API reference.html#tecplot_lib.Point" title="tecplot_lib.Point"><code class="xref any py py-class docutils literal"><span class="pre">Point</span></code></a>, затем создаются полилинии, а затем - экземпляр класса <a class="reference internal" href="API reference.html#tecplot_lib.LineDataExtractor" title="tecplot_lib.LineDataExtractor"><code class="xref any py py-class docutils literal"><span class="pre">LineDataExtractor</span></code></a>. Потом вызывается метод
+run_extraction экземпляра класса <a class="reference internal" href="API reference.html#tecplot_lib.LineDataExtractor" title="tecplot_lib.LineDataExtractor"><code class="xref any py py-class docutils literal"><span class="pre">LineDataExtractor</span></code></a>, который создает и запускает макрос для извлечения данных по полилиниям.
+При этом стоит помнить, что параметр polylines_list у инициализатора класса <a class="reference internal" href="API reference.html#tecplot_lib.LineDataExtractor" title="tecplot_lib.LineDataExtractor"><code class="xref any py py-class docutils literal"><span class="pre">LineDataExtractor</span></code></a> представляет собой список,
+содержащий списки полилиний, каждый из которых соответствует файлу с данными из папки, путь к которой содержится в параметре datafiles_dir
+инициализатора класса <a class="reference internal" href="API reference.html#tecplot_lib.LineDataExtractor" title="tecplot_lib.LineDataExtractor"><code class="xref any py py-class docutils literal"><span class="pre">LineDataExtractor</span></code></a>.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">tecplot_lib</span>
+<span class="kn">from</span> <span class="nn">tecplot_data_files_creation</span> <span class="k">import</span> <span class="n">macros_dir</span><span class="p">,</span> <span class="n">tecplot_dir</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="c1"># директория содержащая файлы с извлеченными данными</span>
+<span class="n">ext_data_dir</span> <span class="o">=</span> <span class="s1">&#39;extracted_data&#39;</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="c1"># создание точек, которые будут узлами полилиний</span>
+    <span class="n">point1</span> <span class="o">=</span> <span class="n">tecplot_lib</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="mf">0.005</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.0005</span><span class="p">,</span> <span class="mf">0.000</span><span class="p">)</span>
+    <span class="n">point2</span> <span class="o">=</span> <span class="n">tecplot_lib</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="mf">0.005</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.0005</span><span class="p">,</span> <span class="mf">0.0399</span><span class="p">)</span>
+    <span class="n">point3</span> <span class="o">=</span> <span class="n">tecplot_lib</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="mf">0.095</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.0005</span><span class="p">,</span> <span class="mf">0.000</span><span class="p">)</span>
+    <span class="n">point4</span> <span class="o">=</span> <span class="n">tecplot_lib</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="mf">0.095</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.0005</span><span class="p">,</span> <span class="mf">0.021</span><span class="p">)</span>
+    <span class="c1"># полилиния, построенная по узлам, находящимся в точках point1 и point2, и содержащая 200 точек</span>
+    <span class="n">pl1</span> <span class="o">=</span> <span class="n">tecplot_lib</span><span class="o">.</span><span class="n">PolyLine</span><span class="p">([</span><span class="n">point1</span><span class="p">,</span> <span class="n">point2</span><span class="p">],</span> <span class="mi">200</span><span class="p">)</span>
+    <span class="c1"># полилиния, построенная по узлам, находящимся в точках point3 и point4, и содержащая 200 точек</span>
+    <span class="n">pl2</span> <span class="o">=</span> <span class="n">tecplot_lib</span><span class="o">.</span><span class="n">PolyLine</span><span class="p">([</span><span class="n">point3</span><span class="p">,</span> <span class="n">point4</span><span class="p">],</span> <span class="mi">200</span><span class="p">)</span>
+    <span class="c1"># список полилиний, по которым будут извелакться данные из файла example.plt</span>
+    <span class="c1"># количество таких списков во входных параметрах к инициализатору класса tecplot_lib.LineDataExtractor должно</span>
+    <span class="c1"># быть равно количеству файлов, содержащихся в директории с данными TecPlot</span>
+    <span class="n">pl_set</span> <span class="o">=</span> <span class="p">[</span><span class="n">pl1</span><span class="p">,</span> <span class="n">pl2</span><span class="p">]</span>
+    <span class="c1"># создание экземпляра класса tecplot_lib.LineDataExtractor</span>
+    <span class="n">data_extractor</span> <span class="o">=</span> <span class="n">tecplot_lib</span><span class="o">.</span><span class="n">LineDataExtractor</span><span class="p">(</span><span class="n">tecplot_dir</span><span class="p">,</span> <span class="n">ext_data_dir</span><span class="p">,</span> <span class="p">[</span><span class="n">pl_set</span><span class="p">],</span>
+                                                   <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">macros_dir</span><span class="p">,</span> <span class="s1">&#39;data_extraction.mcr&#39;</span><span class="p">))</span>
+    <span class="c1"># создание и запуск макроса для извлечения данных</span>
+    <span class="n">data_extractor</span><span class="o">.</span><span class="n">run_extraction</span><span class="p">()</span>
+    <span class="c1">#  результате выполнения скрипта в папке  extracted_data появятся два файла example_line_0.dat и example_line_0.dat</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id3">
+<h2>Загрузка извлеченных данных из текстовых файлов<a class="headerlink" href="#id3" title="Ссылка на этот заголовок">¶</a></h2>
+<p>Осуществляется с помощью класса <a class="reference internal" href="API reference.html#tecplot_lib.LineDataLoader" title="tecplot_lib.LineDataLoader"><code class="xref any py py-class docutils literal"><span class="pre">LineDataLoader</span></code></a>. Его инициализатор содержит лишь один параметр data_dirname,
+содержащий путь к директории с файлами с извлеченными данными. Данные из каждого файла извлекаются вызовом метода load в экземпляры класса
+pandas.DataFrame, список которых содержится в поле frames. После извлечения с помощью модуля matplotlib.pyplot можно осуществить
+построение необходимых графиков.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">tecplot_lib</span>
+<span class="kn">from</span> <span class="nn">data_extraction</span> <span class="k">import</span> <span class="n">ext_data_dir</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="c1"># директория, содержащая файлы с графиками</span>
+<span class="n">plots_dir</span> <span class="o">=</span> <span class="s1">&#39;plots&#39;</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="c1"># создание экземпляра класса LineDataLoader</span>
+    <span class="n">data_loader</span> <span class="o">=</span> <span class="n">tecplot_lib</span><span class="o">.</span><span class="n">LineDataLoader</span><span class="p">(</span><span class="n">ext_data_dir</span><span class="p">)</span>
+    <span class="c1"># вызов метода load класса LineDataLoader, который в поле frames создат список объектов</span>
+    <span class="c1"># класса pandas.DataFrame, в которых будут содержаться данные из считанных файлов</span>
+    <span class="n">data_loader</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+    <span class="c1"># экземпляр класса pandas.DataFrame, содержащий данные из первой полилинии</span>
+    <span class="n">pl1_fr</span> <span class="o">=</span> <span class="n">data_loader</span><span class="o">.</span><span class="n">frames</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="c1"># экземпляр класса pandas.DataFrame, содержащий данные из второй полилинии</span>
+    <span class="n">pl2_fr</span> <span class="o">=</span> <span class="n">data_loader</span><span class="o">.</span><span class="n">frames</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="c1"># создание графика распределения скорости на входе и на выходе в канал</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">pl1_fr</span><span class="p">[</span><span class="s1">&#39;U&#39;</span><span class="p">],</span> <span class="n">pl1_fr</span><span class="p">[</span><span class="s1">&#39;Z&#39;</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;inlet&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">pl2_fr</span><span class="p">[</span><span class="s1">&#39;U&#39;</span><span class="p">],</span> <span class="n">pl2_fr</span><span class="p">[</span><span class="s1">&#39;Z&#39;</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;outlet&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Velocity, m/s&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Z, m&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.040</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">90</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Velocity profile&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">plots_dir</span><span class="p">,</span> <span class="s1">&#39;velocity_profile.png&#39;</span><span class="p">))</span>
+    <span class="c1"># в результате выполнения скрипта в папке plots появится файл velocity_profile.png</span>
+
+</pre></div>
+</div>
+<div class="figure align-center" id="id6">
+<a class="reference internal image-reference" href="_images/velocity_profile.png"><img alt="_images/velocity_profile.png" src="_images/velocity_profile.png" style="width: 640.0px; height: 480.0px;" /></a>
+<p class="caption"><span class="caption-text">Полученный график профилей скорости на входе и на выходе.</span></p>
+</div>
+</div>
+<div class="section" id="id4">
+<h2>Создание изображений срезов<a class="headerlink" href="#id4" title="Ссылка на этот заголовок">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Оглавление</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Examples</a><ul>
+<li><a class="reference internal" href="#cfx-tecplot">Перевод файлов CFX в формат TecPlot</a></li>
+<li><a class="reference internal" href="#id1">Создание новых переменных</a></li>
+<li><a class="reference internal" href="#id2">Извлечение данных по полилинии</a></li>
+<li><a class="reference internal" href="#id3">Загрузка извлеченных данных из текстовых файлов</a></li>
+<li><a class="reference internal" href="#id4">Создание изображений срезов</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Предыдущий раздел</h4>
+  <p class="topless"><a href="introduction.html"
+                        title="предыдущая глава">Introduction</a></p>
+  <h4>Следующий раздел</h4>
+  <p class="topless"><a href="API reference.html"
+                        title="следующая глава">API reference</a></p>
+  <div role="note" aria-label="source link">
+    <h3>Эта страница</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/examples.rst.txt"
+            rel="nofollow">Исходный текст</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Быстрый поиск</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Искать" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Навигация</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="Алфавитный указатель"
+             >указатель</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Содержание модулей Python"
+             >модули</a> |</li>
+        <li class="right" >
+          <a href="API reference.html" title="API reference"
+             >вперёд</a> |</li>
+        <li class="right" >
+          <a href="introduction.html" title="Introduction"
+             >назад</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Документация tecplot_lib </a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, Alexander Zhigalkin.
+      Создано с помощью <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.1.
+    </div>
+  </body>
+</html>
