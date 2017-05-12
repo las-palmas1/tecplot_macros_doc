@@ -13,7 +13,6 @@ Welcome to tecplot_lib's documentation!
    introduction
    examples
    API reference
-   test
 
 Indices and tables
 ==================
