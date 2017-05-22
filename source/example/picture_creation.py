@@ -33,9 +33,9 @@ if __name__ == '__main__':
                                              x_line_pos=0., y_line_pos=0.,
                                              preserve_axis_length=False,
                                              x_title_font=x_title_font, x_label_font=x_label_font,
-                                             x_title_offset=5, y_title_font=y_title_font,
-                                             y_label_font=y_label_font, y_title_offset=5, xlim=(0, 0.1),
-                                             ylim=(0, 0.045))
+                                             x_title_offset=3, x_label_offset=5, y_title_font=y_title_font,
+                                             y_label_font=y_label_font, y_title_offset=5, y_label_offset=3,
+                                             xlim=(0, 0.1), ylim=(0, 0.045))
     # создание экземпляра класса FrameSettings, в котором задаются настройки фрейма
     frame_settings = tecplot_lib.FrameSettings(width=12, height=7)
     # создание экземпляра класса ColormapSettings, в котором содержаться настройки карты цветов
