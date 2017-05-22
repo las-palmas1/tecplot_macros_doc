@@ -44,11 +44,15 @@ if __name__ == '__main__':
     # создание экземпляра класса ExportSettings, в котором содержаться настройки экспорта в формат png
     export_settings = tecplot_lib.ExportSettings(8, os.path.join(image_dir, 'U_long.png'), imagewidth=2000)
 
-    # создание экземпляра класса PictureCreator, енерирующего макрос для создания картинок
+    # создание экземпляра класса TicksSettings, в котором содержаться настройки меток на осях
+    ticks_settings = tecplot_lib.TicksSettings(x_auto_grid=False, y_auto_grid=True, x_minor_thickness=0.3,
+                                               y_minor_thickness=0.3, x_spacing=0.01, x_minor_num_ticks=8)
+
+    # создание экземпляра класса PictureCreator, генерирующего макрос для создания картинок
     picture_creator = tecplot_lib.PictureCreator(os.path.join(tecplot_dir, 'example.plt'),
                                                  os.path.join(macros_dir, 'picture_creation.mcr'), slice_settings,
                                                  level_settings, legend_settings, colormap_settings, axis_settings,
-                                                 export_settings, frame_settings)
+                                                 ticks_settings, export_settings, frame_settings)
     # создание макроса и его запуск
     picture_creator.run_creation()
 

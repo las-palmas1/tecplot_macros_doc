@@ -27,7 +27,6 @@
     <script type="text/javascript" src="_static/translations.js"></script>
     <link rel="index" title="Алфавитный указатель" href="genindex.html" />
     <link rel="search" title="Поиск" href="search.html" />
-    <link rel="next" title="test" href="test.html" />
     <link rel="prev" title="Examples" href="examples.html" /> 
   </head>
   <body role="document">
@@ -40,9 +39,6 @@
         <li class="right" >
           <a href="py-modindex.html" title="Содержание модулей Python"
              >модули</a> |</li>
-        <li class="right" >
-          <a href="test.html" title="test"
-             accesskey="N">вперёд</a> |</li>
         <li class="right" >
           <a href="examples.html" title="Examples"
              accesskey="P">назад</a> |</li>
@@ -59,7 +55,7 @@
 <span id="api-reference"></span><span id="api-ref-label"></span><h1>API reference<a class="headerlink" href="#module-tecplot_lib" title="Ссылка на этот заголовок">¶</a></h1>
 <dl class="class">
 <dt id="tecplot_lib.AxisSettings">
-<em class="property">class </em><code class="descclassname">tecplot_lib.</code><code class="descname">AxisSettings</code><span class="sig-paren">(</span><em>x_axis_var: int</em>, <em>y_axis_var: int</em>, <em>rect: tuple = (10</em>, <em>10</em>, <em>90</em>, <em>90)</em>, <em>x_line_pos: float = 0</em>, <em>y_line_pos: float = 0</em>, <em>preserve_axis_length: bool = False</em>, <em>x_title_font: tecplot_lib.Font = &lt;tecplot_lib.Font object at 0x0000000007EF1B00&gt;</em>, <em>x_label_font: tecplot_lib.Font = &lt;tecplot_lib.Font object at 0x0000000007EF1B38&gt;</em>, <em>x_title_offset: float = 5.0</em>, <em>y_title_font: tecplot_lib.Font = &lt;tecplot_lib.Font object at 0x0000000007EF1B70&gt;</em>, <em>y_label_font: tecplot_lib.Font = &lt;tecplot_lib.Font object at 0x0000000007EF1BA8&gt;</em>, <em>y_title_offset: float = 5.0</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tecplot_lib.html#AxisSettings"><span class="viewcode-link">[исходный код]</span></a><a class="headerlink" href="#tecplot_lib.AxisSettings" title="Ссылка на это определение">¶</a></dt>
+<em class="property">class </em><code class="descclassname">tecplot_lib.</code><code class="descname">AxisSettings</code><span class="sig-paren">(</span><em>x_axis_var: int</em>, <em>y_axis_var: int</em>, <em>rect: tuple = (10</em>, <em>10</em>, <em>90</em>, <em>90)</em>, <em>x_line_pos: float = 0</em>, <em>y_line_pos: float = 0</em>, <em>preserve_axis_length: bool = False</em>, <em>x_title_font: tecplot_lib.Font = &lt;tecplot_lib.Font object at 0x000001BBE9826438&gt;</em>, <em>x_label_font: tecplot_lib.Font = &lt;tecplot_lib.Font object at 0x000001BBE9826470&gt;</em>, <em>x_title_offset: float = 5.0</em>, <em>x_label_offset: float = 1.0</em>, <em>y_title_font: tecplot_lib.Font = &lt;tecplot_lib.Font object at 0x000001BBE98264A8&gt;</em>, <em>y_label_font: tecplot_lib.Font = &lt;tecplot_lib.Font object at 0x000001BBE98264E0&gt;</em>, <em>y_title_offset: float = 5.0</em>, <em>y_label_offset: float = 1.0</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tecplot_lib.html#AxisSettings"><span class="viewcode-link">[исходный код]</span></a><a class="headerlink" href="#tecplot_lib.AxisSettings" title="Ссылка на это определение">¶</a></dt>
 <dd><blockquote>
 <div>Базовые классы: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></div></blockquote>
 <table class="docutils field-list" frame="void" rules="none">
@@ -95,6 +91,9 @@
 <li><strong>x_title_offset</strong> &#8211; <p>float, optional</p>
 <p>сдвиг заголовка оси x относсительно оси</p>
 </li>
+<li><strong>x_label_offset</strong> &#8211; <p>float, optional</p>
+<p>оступ подписей оси x от оси</p>
+</li>
 <li><strong>y_title_font</strong> &#8211; <p>Font, optional</p>
 <p>экземпляр класса Font, содержащий настройки шрифта для заголовка оси y</p>
 </li>
@@ -103,6 +102,9 @@
 </li>
 <li><strong>y_title_offset</strong> &#8211; <p>int, optional</p>
 <p>сдвиг заголовка оси y относсительно оси</p>
+</li>
+<li><strong>y_label_offset</strong> &#8211; <p>float, optional</p>
+<p>оступ подписей оси y от оси</p>
 </li>
 <li><strong>kwargs</strong> &#8211; xlim и ylim (интервалы по осям x и y соотвественно), тип tuple; пример: xlim=(0,1), ylim=(1,2)</li>
 </ul>
@@ -279,7 +281,7 @@
 
 <dl class="class">
 <dt id="tecplot_lib.LegendSettings">
-<em class="property">class </em><code class="descclassname">tecplot_lib.</code><code class="descname">LegendSettings</code><span class="sig-paren">(</span><em>xy_position: tuple = (95</em>, <em>80)</em>, <em>rowspacing: float = 1.2</em>, <em>auto_levelskip: int = 1</em>, <em>isvertical: bool = True</em>, <em>header_font: tecplot_lib.Font = &lt;tecplot_lib.Font object at 0x0000000007EF1A90&gt;</em>, <em>number_font: tecplot_lib.Font = &lt;tecplot_lib.Font object at 0x0000000007EF1AC8&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tecplot_lib.html#LegendSettings"><span class="viewcode-link">[исходный код]</span></a><a class="headerlink" href="#tecplot_lib.LegendSettings" title="Ссылка на это определение">¶</a></dt>
+<em class="property">class </em><code class="descclassname">tecplot_lib.</code><code class="descname">LegendSettings</code><span class="sig-paren">(</span><em>xy_position: tuple = (95</em>, <em>80)</em>, <em>rowspacing: float = 1.2</em>, <em>auto_levelskip: int = 1</em>, <em>isvertical: bool = True</em>, <em>header_font: tecplot_lib.Font = &lt;tecplot_lib.Font object at 0x000001BBE98263C8&gt;</em>, <em>number_font: tecplot_lib.Font = &lt;tecplot_lib.Font object at 0x000001BBE9826400&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tecplot_lib.html#LegendSettings"><span class="viewcode-link">[исходный код]</span></a><a class="headerlink" href="#tecplot_lib.LegendSettings" title="Ссылка на это определение">¶</a></dt>
 <dd><blockquote>
 <div>Базовые классы: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></div></blockquote>
 <table class="docutils field-list" frame="void" rules="none">
@@ -421,7 +423,7 @@
 
 <dl class="class">
 <dt id="tecplot_lib.PictureCreator">
-<em class="property">class </em><code class="descclassname">tecplot_lib.</code><code class="descname">PictureCreator</code><span class="sig-paren">(</span><em>source_file: str</em>, <em>macro_filename: str</em>, <em>slice_settings: tecplot_lib.SliceSettings</em>, <em>level_settings: tecplot_lib.LevelSettings</em>, <em>legend_settings: tecplot_lib.LegendSettings</em>, <em>colormap_settings: tecplot_lib.ColormapSettings</em>, <em>axis_settings: tecplot_lib.AxisSettings</em>, <em>export_settings: tecplot_lib.ExportSettings</em>, <em>frame_settings: tecplot_lib.FrameSettings</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tecplot_lib.html#PictureCreator"><span class="viewcode-link">[исходный код]</span></a><a class="headerlink" href="#tecplot_lib.PictureCreator" title="Ссылка на это определение">¶</a></dt>
+<em class="property">class </em><code class="descclassname">tecplot_lib.</code><code class="descname">PictureCreator</code><span class="sig-paren">(</span><em>source_file: str</em>, <em>macro_filename: str</em>, <em>slice_settings: tecplot_lib.SliceSettings</em>, <em>level_settings: tecplot_lib.LevelSettings</em>, <em>legend_settings: tecplot_lib.LegendSettings</em>, <em>colormap_settings: tecplot_lib.ColormapSettings</em>, <em>axis_settings: tecplot_lib.AxisSettings</em>, <em>ticks_settings: tecplot_lib.TicksSettings</em>, <em>export_settings: tecplot_lib.ExportSettings</em>, <em>frame_settings: tecplot_lib.FrameSettings</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tecplot_lib.html#PictureCreator"><span class="viewcode-link">[исходный код]</span></a><a class="headerlink" href="#tecplot_lib.PictureCreator" title="Ссылка на это определение">¶</a></dt>
 <dd><blockquote>
 <div>Базовые классы: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></div></blockquote>
 <table class="docutils field-list" frame="void" rules="none">
@@ -440,6 +442,7 @@
 <li><strong>legend_settings</strong> &#8211; LegendSettings</li>
 <li><strong>colormap_settings</strong> &#8211; ColorMap</li>
 <li><strong>axis_settings</strong> &#8211; AxisSettings</li>
+<li><strong>ticks_settings</strong> &#8211; TicksSettings</li>
 <li><strong>export_settings</strong> &#8211; ExportSettings</li>
 <li><strong>frame_settings</strong> &#8211; FrameSettings</li>
 </ul>
@@ -535,6 +538,50 @@ slice_type = SliceType.ARBITRARY</li>
 <code class="descname">ZPLANES</code><em class="property"> = 2</em><a class="headerlink" href="#tecplot_lib.SliceType.ZPLANES" title="Ссылка на это определение">¶</a></dt>
 <dd></dd></dl>
 
+</dd></dl>
+
+<dl class="class">
+<dt id="tecplot_lib.TicksSettings">
+<em class="property">class </em><code class="descclassname">tecplot_lib.</code><code class="descname">TicksSettings</code><span class="sig-paren">(</span><em>x_auto_grid: bool = True</em>, <em>x_major_thickness: float = 0.5</em>, <em>x_major_length: float = 2</em>, <em>x_minor_thickness: float = 0.12</em>, <em>x_minor_length: float = 1.2</em>, <em>y_auto_grid: bool = True</em>, <em>y_major_thickness: float = 0.5</em>, <em>y_major_length: float = 2.0</em>, <em>y_minor_thickness: float = 0.12</em>, <em>y_minor_length: float = 1.2</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tecplot_lib.html#TicksSettings"><span class="viewcode-link">[исходный код]</span></a><a class="headerlink" href="#tecplot_lib.TicksSettings" title="Ссылка на это определение">¶</a></dt>
+<dd><blockquote>
+<div>Базовые классы: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Параметры:</th><td class="field-body"><ul class="first last simple">
+<li><strong>x_auto_grid</strong> &#8211; <p>bool, optional</p>
+<p>Параметр регулирует автонастройку сетки на оси x</p>
+</li>
+<li><strong>x_major_thickness</strong> &#8211; <p>float, optional</p>
+<p>Толщина основных меток на оси x</p>
+</li>
+<li><strong>x_major_length</strong> &#8211; <p>float, optional</p>
+<p>Длина основных меток на оси x</p>
+</li>
+<li><strong>x_minor_thickness</strong> &#8211; <p>float, optional</p>
+<p>Толщина второстепенных меток на оси x</p>
+</li>
+<li><strong>x_minor_length</strong> &#8211; <p>float, optional</p>
+<p>Длина второстепенных меток по оси x</p>
+</li>
+<li><strong>y_auto_grid</strong> &#8211; bool, optional</li>
+<li><strong>y_major_thickness</strong> &#8211; float, optional</li>
+<li><strong>y_major_length</strong> &#8211; float, optional</li>
+<li><strong>y_minor_thickness</strong> &#8211; float, optional</li>
+<li><strong>y_minor_length</strong> &#8211; float, optional</li>
+<li><strong>kwargs</strong> &#8211; <p>x_spacing - float; шаг по оси x, необходимо задавать, если x_auto_grid == False</p>
+<p>y_spacing - float; шаг по оси y, необходимо задавать, если y_auto_grid == False</p>
+<p>x_minor_num_ticks - int; количество второстепенных меток между основными на оси x, необходимо задавать, 
+если x_auto_grid == False</p>
+<p>y_minor_num_ticks - int; количество второстепенных меток между основными на оси y, необходимо задавать, 
+если y_auto_grid == False</p>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
@@ -655,6 +702,51 @@ slice_type = SliceType.ARBITRARY</li>
 </dd></dl>
 
 <dl class="function">
+<dt id="tecplot_lib.get_ticks_settings_macro">
+<code class="descclassname">tecplot_lib.</code><code class="descname">get_ticks_settings_macro</code><span class="sig-paren">(</span><em>x_auto_grid: bool = True</em>, <em>x_major_thickness: float = 0.5</em>, <em>x_major_length: float = 2</em>, <em>x_minor_thickness: float = 0.12</em>, <em>x_minor_length: float = 1.2</em>, <em>y_auto_grid: bool = True</em>, <em>y_major_thickness: float = 0.5</em>, <em>y_major_length: float = 2.0</em>, <em>y_minor_thickness: float = 0.12</em>, <em>y_minor_length: float = 1.2</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tecplot_lib.html#get_ticks_settings_macro"><span class="viewcode-link">[исходный код]</span></a><a class="headerlink" href="#tecplot_lib.get_ticks_settings_macro" title="Ссылка на это определение">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Параметры:</th><td class="field-body"><ul class="first simple">
+<li><strong>x_auto_grid</strong> &#8211; <p>bool, optional</p>
+<p>Параметр регулирует автонастройку сетки на оси x</p>
+</li>
+<li><strong>x_major_thickness</strong> &#8211; <p>float, optional</p>
+<p>Толщина основных меток на оси x</p>
+</li>
+<li><strong>x_major_length</strong> &#8211; <p>float, optional</p>
+<p>Длина основных меток на оси x</p>
+</li>
+<li><strong>x_minor_thickness</strong> &#8211; <p>float, optional</p>
+<p>Толщина второстепенных меток на оси x</p>
+</li>
+<li><strong>x_minor_length</strong> &#8211; <p>float, optional</p>
+<p>Длина второстепенных меток по оси x</p>
+</li>
+<li><strong>y_auto_grid</strong> &#8211; bool, optional</li>
+<li><strong>y_major_thickness</strong> &#8211; float, optional</li>
+<li><strong>y_major_length</strong> &#8211; float, optional</li>
+<li><strong>y_minor_thickness</strong> &#8211; float, optional</li>
+<li><strong>y_minor_length</strong> &#8211; float, optional</li>
+<li><strong>kwargs</strong> &#8211; <p>x_spacing - float; шаг по оси x, необходимо задавать, если x_auto_grid == False</p>
+<p>y_spacing - float; шаг по оси y, необходимо задавать, если y_auto_grid == False</p>
+<p>x_minor_num_ticks - int; количество второстепенных меток между основными на оси x, необходимо задавать, 
+если x_auto_grid == False</p>
+<p>y_minor_num_ticks - int; количество второстепенных меток между основными на оси y, необходимо задавать, 
+если y_auto_grid == False</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Результат:</th><td class="field-body"><p class="first last">str</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
 <dt id="tecplot_lib.get_write_data_set_command">
 <code class="descclassname">tecplot_lib.</code><code class="descname">get_write_data_set_command</code><span class="sig-paren">(</span><em>filename: str</em><span class="sig-paren">)</span> &rarr; str<a class="reference internal" href="_modules/tecplot_lib.html#get_write_data_set_command"><span class="viewcode-link">[исходный код]</span></a><a class="headerlink" href="#tecplot_lib.get_write_data_set_command" title="Ссылка на это определение">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
@@ -690,9 +782,6 @@ slice_type = SliceType.ARBITRARY</li>
   <h4>Предыдущий раздел</h4>
   <p class="topless"><a href="examples.html"
                         title="предыдущая глава">Examples</a></p>
-  <h4>Следующий раздел</h4>
-  <p class="topless"><a href="test.html"
-                        title="следующая глава">test</a></p>
   <div role="note" aria-label="source link">
     <h3>Эта страница</h3>
     <ul class="this-page-menu">
@@ -723,9 +812,6 @@ slice_type = SliceType.ARBITRARY</li>
         <li class="right" >
           <a href="py-modindex.html" title="Содержание модулей Python"
              >модули</a> |</li>
-        <li class="right" >
-          <a href="test.html" title="test"
-             >вперёд</a> |</li>
         <li class="right" >
           <a href="examples.html" title="Examples"
              >назад</a> |</li>
