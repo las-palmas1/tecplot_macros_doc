@@ -55,7 +55,7 @@
 <span id="api-reference"></span><span id="api-ref-label"></span><h1>API reference<a class="headerlink" href="#module-tecplot_lib" title="Ссылка на этот заголовок">¶</a></h1>
 <dl class="class">
 <dt id="tecplot_lib.AxisSettings">
-<em class="property">class </em><code class="descclassname">tecplot_lib.</code><code class="descname">AxisSettings</code><span class="sig-paren">(</span><em>x_axis_var: int</em>, <em>y_axis_var: int</em>, <em>rect: tuple = (10</em>, <em>10</em>, <em>90</em>, <em>90)</em>, <em>x_line_pos: float = 0</em>, <em>y_line_pos: float = 0</em>, <em>preserve_axis_length: bool = False</em>, <em>x_title_font: tecplot_lib.Font = &lt;tecplot_lib.Font object at 0x000001BBE9826438&gt;</em>, <em>x_label_font: tecplot_lib.Font = &lt;tecplot_lib.Font object at 0x000001BBE9826470&gt;</em>, <em>x_title_offset: float = 5.0</em>, <em>x_label_offset: float = 1.0</em>, <em>y_title_font: tecplot_lib.Font = &lt;tecplot_lib.Font object at 0x000001BBE98264A8&gt;</em>, <em>y_label_font: tecplot_lib.Font = &lt;tecplot_lib.Font object at 0x000001BBE98264E0&gt;</em>, <em>y_title_offset: float = 5.0</em>, <em>y_label_offset: float = 1.0</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tecplot_lib.html#AxisSettings"><span class="viewcode-link">[исходный код]</span></a><a class="headerlink" href="#tecplot_lib.AxisSettings" title="Ссылка на это определение">¶</a></dt>
+<em class="property">class </em><code class="descclassname">tecplot_lib.</code><code class="descname">AxisSettings</code><span class="sig-paren">(</span><em>x_axis_var: int</em>, <em>y_axis_var: int</em>, <em>rect: tuple = (10</em>, <em>10</em>, <em>90</em>, <em>90)</em>, <em>x_line_pos: float = 0</em>, <em>y_line_pos: float = 0</em>, <em>preserve_axis_length: bool = False</em>, <em>x_title_font: tecplot_lib.Font = &lt;tecplot_lib.Font object at 0x0000000008067BE0&gt;</em>, <em>x_label_font: tecplot_lib.Font = &lt;tecplot_lib.Font object at 0x0000000008067C18&gt;</em>, <em>x_title_offset: float = 5.0</em>, <em>x_label_offset: float = 1.0</em>, <em>y_title_font: tecplot_lib.Font = &lt;tecplot_lib.Font object at 0x0000000008067C50&gt;</em>, <em>y_label_font: tecplot_lib.Font = &lt;tecplot_lib.Font object at 0x0000000008067C88&gt;</em>, <em>y_title_offset: float = 5.0</em>, <em>y_label_offset: float = 1.0</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tecplot_lib.html#AxisSettings"><span class="viewcode-link">[исходный код]</span></a><a class="headerlink" href="#tecplot_lib.AxisSettings" title="Ссылка на это определение">¶</a></dt>
 <dd><blockquote>
 <div>Базовые классы: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></div></blockquote>
 <table class="docutils field-list" frame="void" rules="none">
@@ -281,7 +281,7 @@
 
 <dl class="class">
 <dt id="tecplot_lib.LegendSettings">
-<em class="property">class </em><code class="descclassname">tecplot_lib.</code><code class="descname">LegendSettings</code><span class="sig-paren">(</span><em>xy_position: tuple = (95</em>, <em>80)</em>, <em>rowspacing: float = 1.2</em>, <em>auto_levelskip: int = 1</em>, <em>isvertical: bool = True</em>, <em>header_font: tecplot_lib.Font = &lt;tecplot_lib.Font object at 0x000001BBE98263C8&gt;</em>, <em>number_font: tecplot_lib.Font = &lt;tecplot_lib.Font object at 0x000001BBE9826400&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tecplot_lib.html#LegendSettings"><span class="viewcode-link">[исходный код]</span></a><a class="headerlink" href="#tecplot_lib.LegendSettings" title="Ссылка на это определение">¶</a></dt>
+<em class="property">class </em><code class="descclassname">tecplot_lib.</code><code class="descname">LegendSettings</code><span class="sig-paren">(</span><em>xy_position: tuple = (95</em>, <em>80)</em>, <em>rowspacing: float = 1.2</em>, <em>auto_levelskip: int = 1</em>, <em>isvertical: bool = True</em>, <em>header_font: tecplot_lib.Font = &lt;tecplot_lib.Font object at 0x0000000008067B70&gt;</em>, <em>number_font: tecplot_lib.Font = &lt;tecplot_lib.Font object at 0x0000000008067BA8&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tecplot_lib.html#LegendSettings"><span class="viewcode-link">[исходный код]</span></a><a class="headerlink" href="#tecplot_lib.LegendSettings" title="Ссылка на это определение">¶</a></dt>
 <dd><blockquote>
 <div>Базовые классы: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></div></blockquote>
 <table class="docutils field-list" frame="void" rules="none">
@@ -451,9 +451,34 @@
 </tbody>
 </table>
 <dl class="method">
+<dt id="tecplot_lib.PictureCreator.add_to_existing_macro">
+<code class="descname">add_to_existing_macro</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tecplot_lib.html#PictureCreator.add_to_existing_macro"><span class="viewcode-link">[исходный код]</span></a><a class="headerlink" href="#tecplot_lib.PictureCreator.add_to_existing_macro" title="Ссылка на это определение">¶</a></dt>
+<dd><p>Добавляет команды в существующий макрос. Если файла с макросом не существует, создает пустой файл
+и записывает в него команды.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Результат:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="tecplot_lib.PictureCreator.run_creation">
 <code class="descname">run_creation</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tecplot_lib.html#PictureCreator.run_creation"><span class="viewcode-link">[исходный код]</span></a><a class="headerlink" href="#tecplot_lib.PictureCreator.run_creation" title="Ссылка на это определение">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Запускает файл макроса. Если файл пуст или его не существует, создает файл макроса, записывает в
+него команды и запускает.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Результат:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 </dd></dl>
 

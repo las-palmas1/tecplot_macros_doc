@@ -4,6 +4,8 @@ import os
 
 # директория с изображениями
 image_dir = 'images'
+sourcefile_name = os.path.join(tecplot_dir, 'example.plt')
+macro_name = os.path.join(macros_dir, 'picture_creation.mcr')
 
 if __name__ == '__main__':
     # координаты точки, через которую проходит срез
@@ -14,7 +16,7 @@ if __name__ == '__main__':
     slice_settings = tecplot_lib.SliceSettings(slice_type=tecplot_lib.SliceType.ARBITRARY, position=pos,
                                                normal=normal)
     # создание экземляра класса LevelSettings, в котором содержаться настройки уровней
-    level_settings = tecplot_lib.LevelSettings(variable_number=19, min_level=0, max_level=90, num_levels=16)
+    level_settings1 = tecplot_lib.LevelSettings(variable_number=19, min_level=0, max_level=90, num_levels=16)
     # задание настроик шрифтов заголовка и подписей для легенды
     legend_header_font = tecplot_lib.Font(font_family='Helvetica', is_bold=True, is_italic=False, height=5)
     legend_number_font = tecplot_lib.Font(font_family='Helvetica', is_bold=True, is_italic=False, height=5)
@@ -39,21 +41,38 @@ if __name__ == '__main__':
     # создание экземпляра класса FrameSettings, в котором задаются настройки фрейма
     frame_settings = tecplot_lib.FrameSettings(width=12, height=7)
     # создание экземпляра класса ColormapSettings, в котором содержаться настройки карты цветов
-    colormap_settings = tecplot_lib.ColormapSettings(color_distribution=tecplot_lib.ColorDistribution.CONTINUOUS,
-                                                     color_min=0, color_max=90)
+    colormap_settings1 = tecplot_lib.ColormapSettings(color_distribution=tecplot_lib.ColorDistribution.CONTINUOUS,
+                                                      color_min=0, color_max=90)
     # создание экземпляра класса ExportSettings, в котором содержаться настройки экспорта в формат png
-    export_settings = tecplot_lib.ExportSettings(8, os.path.join(image_dir, 'U_long.png'), imagewidth=2000)
+    export_settings1 = tecplot_lib.ExportSettings(8, os.path.join(image_dir, 'U_long.png'), imagewidth=2000)
 
     # создание экземпляра класса TicksSettings, в котором содержаться настройки меток на осях
     ticks_settings = tecplot_lib.TicksSettings(x_auto_grid=False, y_auto_grid=True, x_minor_thickness=0.3,
                                                y_minor_thickness=0.3, x_spacing=0.01, x_minor_num_ticks=8)
 
     # создание экземпляра класса PictureCreator, генерирующего макрос для создания картинок
-    picture_creator = tecplot_lib.PictureCreator(os.path.join(tecplot_dir, 'example.plt'),
-                                                 os.path.join(macros_dir, 'picture_creation.mcr'), slice_settings,
-                                                 level_settings, legend_settings, colormap_settings, axis_settings,
-                                                 ticks_settings, export_settings, frame_settings)
-    # создание макроса и его запуск
-    picture_creator.run_creation()
+    picture_creator1 = tecplot_lib.PictureCreator(sourcefile_name,
+                                                  macro_name, slice_settings,
+                                                  level_settings1, legend_settings, colormap_settings1, axis_settings,
+                                                  ticks_settings, export_settings1, frame_settings)
+    # создание макроса и его запись в него команд для создания изображения
+    picture_creator1.add_to_existing_macro()
+
+    # создание экземляра класса LevelSettings, в котором содержаться настройки уровней
+    level_settings2 = tecplot_lib.LevelSettings(variable_number=21, min_level=-30, max_level=0, num_levels=16)
+    # создание экземпляра класса ColormapSettings, в котором содержаться настройки карты цветов
+    colormap_settings2 = tecplot_lib.ColormapSettings(color_distribution=tecplot_lib.ColorDistribution.CONTINUOUS,
+                                                      color_min=-30, color_max=0)
+    # создание экземпляра класса ExportSettings, в котором содержаться настройки экспорта в формат png
+    export_settings2 = tecplot_lib.ExportSettings(8, os.path.join(image_dir, 'W_long.png'), imagewidth=2000)
+
+    picture_creator2 = tecplot_lib.PictureCreator(sourcefile_name,
+                                                  macro_name, slice_settings,
+                                                  level_settings2, legend_settings, colormap_settings2, axis_settings,
+                                                  ticks_settings, export_settings2, frame_settings)
+    # добавление команд для создания второго изображения в уже существующий файл макроса
+    picture_creator2.add_to_existing_macro()
+    # запуск макроса
+    picture_creator2.run_creation()
 
     # в результате запуска скрипта в папке images появится файл U_long.png

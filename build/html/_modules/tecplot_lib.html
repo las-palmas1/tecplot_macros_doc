@@ -57,7 +57,7 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 
-<span class="n">__version__</span> <span class="o">=</span> <span class="s1">&#39;0.1&#39;</span>
+<span class="n">__version__</span> <span class="o">=</span> <span class="s1">&#39;0.2&#39;</span>
 <span class="n">__author__</span> <span class="o">=</span> <span class="s1">&#39;Alexander Zhigalkin&#39;</span>
 
 <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%(msg)s</span><span class="s1">&#39;</span><span class="p">)</span>
@@ -86,7 +86,7 @@
              <span class="s2">&quot;$!VarSet |MFBD| = &#39;C:\Program Files\Tecplot\Tecplot 360 EX 2016 R2&#39;</span><span class="se">\n</span><span class="s2">&quot;</span> \
              <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">&quot;</span>\
              <span class="s2">&quot;$!RemoveVar |MFBD|</span><span class="se">\n</span><span class="s2">&quot;</span> \
-             <span class="s2">&quot;$!Quit&quot;</span> <span class="o">%</span> <span class="n">macro_body</span>
+             <span class="s2">&quot;$!Quit</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">macro_body</span>
     <span class="k">return</span> <span class="n">result</span></div>
 
 
@@ -426,7 +426,9 @@
               <span class="s2">&quot;      Y2 = </span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span> \
               <span class="s2">&quot;    }</span><span class="se">\n</span><span class="s2">&quot;</span> \
               <span class="s2">&quot;  }</span><span class="se">\n</span><span class="s2">&quot;</span> \
+              <span class="s2">&quot;$!TWODAXIS XDETAIL{AXISLINE{AXISALIGNMENT = WITHVIEWPORT}}</span><span class="se">\n</span><span class="s2">&quot;</span> \
               <span class="s2">&quot;$!TWODAXIS XDETAIL{AXISLINE{POSITION = </span><span class="si">%s</span><span class="s2">}}</span><span class="se">\n</span><span class="s2">&quot;</span> \
+              <span class="s2">&quot;$!TWODAXIS YDETAIL{AXISLINE{AXISALIGNMENT = WITHVIEWPORT}}</span><span class="se">\n</span><span class="s2">&quot;</span> \
               <span class="s2">&quot;$!TWODAXIS YDETAIL{AXISLINE{POSITION = </span><span class="si">%s</span><span class="s2">}}</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">rect</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">rect</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">rect</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">rect</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span>
                                                                  <span class="n">x_line_pos</span><span class="p">,</span> <span class="n">y_line_pos</span><span class="p">)</span>
     <span class="k">if</span> <span class="s1">&#39;xlim&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span> <span class="ow">and</span> <span class="s1">&#39;ylim&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
@@ -963,12 +965,74 @@
                                             <span class="bp">self</span><span class="o">.</span><span class="n">colormap_settings</span><span class="o">.</span><span class="n">colormap_name</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">colormap_settings</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_get_create_picture_macro</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">_get_create_picture_macro</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">axis_settings</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ticks_settings</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">export_settings</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">frame_settings</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">_get_create_picture_macro</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">axis_settings</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ticks_settings</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">export_settings</span><span class="p">,</span>
+                                         <span class="bp">self</span><span class="o">.</span><span class="n">frame_settings</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_get_legend_font_settings</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">_get_legend_font_settings</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">legend_settings</span><span class="o">.</span><span class="n">header_font</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">legend_settings</span><span class="o">.</span><span class="n">number_font</span><span class="p">)</span>
 
 <div class="viewcode-block" id="PictureCreator.run_creation"><a class="viewcode-back" href="../API reference.html#tecplot_lib.PictureCreator.run_creation">[документация]</a>    <span class="k">def</span> <span class="nf">run_creation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Запускает файл макроса. Если файл пуст или его не существует, создает файл макроса, записывает в</span>
+<span class="sd">        него команды и запускает.</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_macro_existence</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">macro_filename</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_wrapped</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">macro_filename</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_clear_macro</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">macro_filename</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">macro_filename</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+            <span class="n">content</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">content</span><span class="o">.</span><span class="n">__len__</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_to_existing_macro</span><span class="p">()</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">macro_filename</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+            <span class="n">content</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="n">create_macro_file</span><span class="p">(</span><span class="n">wrap_macro</span><span class="p">(</span><span class="n">content</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">macro_filename</span><span class="p">)</span>
+        <span class="n">execute_macro</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">macro_filename</span><span class="p">)</span></div>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_add_string_to_file</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">string_to_add</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+            <span class="n">content</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+            <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">content</span> <span class="o">+</span> <span class="n">string_to_add</span><span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_check_macro_existence</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">macro_filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">macro_filename</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+            <span class="n">file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+            <span class="n">file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">macro_filename</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+            <span class="n">file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_is_wrapped</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">macro_filename</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">macro_filename</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+            <span class="n">content</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">content</span><span class="o">.</span><span class="n">__len__</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">content</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">content</span><span class="p">)</span><span class="o">-</span><span class="mi">5</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">content</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Quit&#39;</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">True</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_clear_macro</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">macro_filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">macro_filename</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+        <span class="n">file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+<div class="viewcode-block" id="PictureCreator.add_to_existing_macro"><a class="viewcode-back" href="../API reference.html#tecplot_lib.PictureCreator.add_to_existing_macro">[документация]</a>    <span class="k">def</span> <span class="nf">add_to_existing_macro</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Добавляет команды в существующий макрос. Если файла с макросом не существует, создает пустой файл</span>
+<span class="sd">        и записывает в него команды.</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_macro_existence</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">macro_filename</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_wrapped</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">macro_filename</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_clear_macro</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">macro_filename</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">source_file</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;.plt&#39;</span><span class="p">:</span>
             <span class="n">open_file</span> <span class="o">=</span> <span class="n">get_open_data_file_command</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">source_file</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -979,25 +1043,13 @@
         <span class="n">legend_font_setting</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_legend_font_settings</span><span class="p">()</span>
         <span class="n">colormap_settings</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_colormap_settings_macro</span><span class="p">()</span>
         <span class="n">create_picture</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_create_picture_macro</span><span class="p">()</span>
-        <span class="n">macro</span> <span class="o">=</span> <span class="n">wrap_macro</span><span class="p">(</span><span class="n">open_file</span> <span class="o">+</span> <span class="n">slice_settings</span> <span class="o">+</span> <span class="n">level_settings</span> <span class="o">+</span> <span class="n">legend_settings</span> <span class="o">+</span> <span class="n">legend_font_setting</span> <span class="o">+</span>
-                           <span class="n">colormap_settings</span> <span class="o">+</span> <span class="n">create_picture</span><span class="p">)</span>
-        <span class="n">create_macro_file</span><span class="p">(</span><span class="n">macro</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">macro_filename</span><span class="p">)</span>
-        <span class="n">execute_macro</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">macro_filename</span><span class="p">)</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_add_string_to_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">macro_filename</span><span class="p">,</span> <span class="n">open_file</span> <span class="o">+</span> <span class="n">slice_settings</span> <span class="o">+</span> <span class="n">level_settings</span> <span class="o">+</span> <span class="n">legend_settings</span> <span class="o">+</span>
+                                 <span class="n">legend_font_setting</span> <span class="o">+</span> <span class="n">colormap_settings</span> <span class="o">+</span> <span class="n">create_picture</span><span class="p">)</span></div></div>
 
 
 <span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
     <span class="k">pass</span>
-    <span class="c1"># slice_settings = SliceSettings(SliceType.ARBITRARY, (0.1, 0.15, 0.1), normal=(0, 1, 0))</span>
-    <span class="c1"># legend_settings = LegendSettings(xy_position=(90, 45))</span>
-    <span class="c1"># levels_settings = LevelSettings(5, 0, 90, 10)</span>
-    <span class="c1"># colormap_settings = ColormapSettings(ColorDistribution.BANDED, ColorMap.MODERN)</span>
-    <span class="c1"># axis_settings = AxisSettings(0, 3, rect=(10, 10, 80, 40),</span>
-    <span class="c1">#                              xlim=(-0.1, 8.1), ylim=(-0.05, 0.4))</span>
-    <span class="c1"># export_settings = ExportSettings(2, r&#39;pictures\test.png&#39;)</span>
-    <span class="c1"># pic_creator = PictureCreator(r&#39;data_files\average_grid_density_sp_al.plt&#39;, &#39;macros\picture_creation.mcr&#39;,</span>
-    <span class="c1">#                              slice_settings, levels_settings, legend_settings, colormap_settings,</span>
-    <span class="c1">#                              axis_settings, export_settings)</span>
-    <span class="c1"># pic_creator.run_creation()</span>
+
 
 </pre></div>
 
