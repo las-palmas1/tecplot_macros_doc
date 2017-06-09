@@ -55,7 +55,7 @@
 <span id="api-reference"></span><span id="api-ref-label"></span><h1>API reference<a class="headerlink" href="#module-tecplot_lib" title="Ссылка на этот заголовок">¶</a></h1>
 <dl class="class">
 <dt id="tecplot_lib.AxisSettings">
-<em class="property">class </em><code class="descclassname">tecplot_lib.</code><code class="descname">AxisSettings</code><span class="sig-paren">(</span><em>x_axis_var: int</em>, <em>y_axis_var: int</em>, <em>rect: tuple = (10</em>, <em>10</em>, <em>90</em>, <em>90)</em>, <em>x_line_pos: float = 0</em>, <em>y_line_pos: float = 0</em>, <em>preserve_axis_length: bool = False</em>, <em>x_title_font: tecplot_lib.Font = &lt;tecplot_lib.Font object at 0x0000000008067BE0&gt;</em>, <em>x_label_font: tecplot_lib.Font = &lt;tecplot_lib.Font object at 0x0000000008067C18&gt;</em>, <em>x_title_offset: float = 5.0</em>, <em>x_label_offset: float = 1.0</em>, <em>y_title_font: tecplot_lib.Font = &lt;tecplot_lib.Font object at 0x0000000008067C50&gt;</em>, <em>y_label_font: tecplot_lib.Font = &lt;tecplot_lib.Font object at 0x0000000008067C88&gt;</em>, <em>y_title_offset: float = 5.0</em>, <em>y_label_offset: float = 1.0</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tecplot_lib.html#AxisSettings"><span class="viewcode-link">[исходный код]</span></a><a class="headerlink" href="#tecplot_lib.AxisSettings" title="Ссылка на это определение">¶</a></dt>
+<em class="property">class </em><code class="descclassname">tecplot_lib.</code><code class="descname">AxisSettings</code><span class="sig-paren">(</span><em>x_axis_var: int</em>, <em>y_axis_var: int</em>, <em>rect: tuple = (10</em>, <em>10</em>, <em>90</em>, <em>90)</em>, <em>x_line_pos: float = 0</em>, <em>y_line_pos: float = 0</em>, <em>x_to_y_ratio=1</em>, <em>preserve_axis_length: bool = False</em>, <em>x_title_font: tecplot_lib.Font = &lt;tecplot_lib.Font object at 0x0000000007F151D0&gt;</em>, <em>x_label_font: tecplot_lib.Font = &lt;tecplot_lib.Font object at 0x0000000007F15240&gt;</em>, <em>x_title_offset: float = 5.0</em>, <em>x_label_offset: float = 1.0</em>, <em>y_title_font: tecplot_lib.Font = &lt;tecplot_lib.Font object at 0x0000000007F15278&gt;</em>, <em>y_label_font: tecplot_lib.Font = &lt;tecplot_lib.Font object at 0x0000000007F152B0&gt;</em>, <em>y_title_offset: float = 5.0</em>, <em>y_label_offset: float = 1.0</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tecplot_lib.html#AxisSettings"><span class="viewcode-link">[исходный код]</span></a><a class="headerlink" href="#tecplot_lib.AxisSettings" title="Ссылка на это определение">¶</a></dt>
 <dd><blockquote>
 <div>Базовые классы: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></div></blockquote>
 <table class="docutils field-list" frame="void" rules="none">
@@ -81,6 +81,9 @@
 </li>
 <li><strong>y_line_pos</strong> &#8211; <p>float</p>
 <p>Позиция вертикальной оси по горизонтали</p>
+</li>
+<li><strong>x_to_y_ratio</strong> &#8211; <p>int, optional</p>
+<p>Отношение масштаба на оси x к масштабу на оси y</p>
 </li>
 <li><strong>x_title_font</strong> &#8211; <p>Font, optional</p>
 <p>экземпляр класса Font, содержащий настройки шрифта для заголовка оси x</p>
@@ -280,8 +283,167 @@
 </dd></dl>
 
 <dl class="class">
+<dt id="tecplot_lib.LayoutParser">
+<em class="property">class </em><code class="descclassname">tecplot_lib.</code><code class="descname">LayoutParser</code><span class="sig-paren">(</span><em>layout_name: str</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tecplot_lib.html#LayoutParser"><span class="viewcode-link">[исходный код]</span></a><a class="headerlink" href="#tecplot_lib.LayoutParser" title="Ссылка на это определение">¶</a></dt>
+<dd><blockquote>
+<div>Базовые классы: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></div></blockquote>
+<p>Обеспечивает возможность парсинга .lay файлов и считывания некоторых настроек изображения, значения которых
+сохраняются в следующие поля:</p>
+<ol class="arabic">
+<li><table class="first docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">param frame_width:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body"><p class="first">float</p>
+<p class="last">Ширина фрейма.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><table class="first docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">param frame_height:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body"><p class="first">float</p>
+<p class="last">Высота фрейма.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><table class="first docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">param x_y_axis_var:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body"><p class="first">int</p>
+<p class="last">Номер переменной, откладываемой по оси X.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><table class="first docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">param y_y_axis_var:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body"><p class="first">int</p>
+<p class="last">Номер переменной, откладываемой по оси Y.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><table class="first docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">param x_to_y_ratio:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body"><p class="first">float</p>
+<p class="last">Отношение масштаба по оси X к масштабу по оси Y.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><table class="first docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">param rect:</th><td class="field-body"><p class="first">tuple</p>
+<p class="last">Определяет положение прямоугольника сетки на frame, rect=(x1, y1, x2, y2).</p>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><table class="first docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">param xlim:</th><td class="field-body"><p class="first">tuple</p>
+<p class="last">Определяет интервал значений по оси X, xlim=(xmin, xmax).</p>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><table class="first docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">param ylim:</th><td class="field-body"><p class="first">tuple</p>
+<p class="last">Определяет интервал значений по оси Y, ylim=(ymin, ymax).</p>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+</ol>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Параметры:</th><td class="field-body"><strong>layout_name</strong> &#8211; <p>str</p>
+<p>Имя .lay файла, с которого необходимо считать настройки изображения.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="tecplot_lib.LayoutParser.frame_height">
+<code class="descname">frame_height</code><a class="headerlink" href="#tecplot_lib.LayoutParser.frame_height" title="Ссылка на это определение">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="tecplot_lib.LayoutParser.frame_width">
+<code class="descname">frame_width</code><a class="headerlink" href="#tecplot_lib.LayoutParser.frame_width" title="Ссылка на это определение">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="tecplot_lib.LayoutParser.rect">
+<code class="descname">rect</code><a class="headerlink" href="#tecplot_lib.LayoutParser.rect" title="Ссылка на это определение">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tecplot_lib.LayoutParser.run_parsing">
+<code class="descname">run_parsing</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tecplot_lib.html#LayoutParser.run_parsing"><span class="viewcode-link">[исходный код]</span></a><a class="headerlink" href="#tecplot_lib.LayoutParser.run_parsing" title="Ссылка на это определение">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="tecplot_lib.LayoutParser.x_axis_var">
+<code class="descname">x_axis_var</code><a class="headerlink" href="#tecplot_lib.LayoutParser.x_axis_var" title="Ссылка на это определение">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="tecplot_lib.LayoutParser.x_to_y_ratio">
+<code class="descname">x_to_y_ratio</code><a class="headerlink" href="#tecplot_lib.LayoutParser.x_to_y_ratio" title="Ссылка на это определение">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="tecplot_lib.LayoutParser.xlim">
+<code class="descname">xlim</code><a class="headerlink" href="#tecplot_lib.LayoutParser.xlim" title="Ссылка на это определение">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="tecplot_lib.LayoutParser.y_axis_var">
+<code class="descname">y_axis_var</code><a class="headerlink" href="#tecplot_lib.LayoutParser.y_axis_var" title="Ссылка на это определение">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="tecplot_lib.LayoutParser.ylim">
+<code class="descname">ylim</code><a class="headerlink" href="#tecplot_lib.LayoutParser.ylim" title="Ссылка на это определение">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="tecplot_lib.LegendSettings">
-<em class="property">class </em><code class="descclassname">tecplot_lib.</code><code class="descname">LegendSettings</code><span class="sig-paren">(</span><em>xy_position: tuple = (95</em>, <em>80)</em>, <em>rowspacing: float = 1.2</em>, <em>auto_levelskip: int = 1</em>, <em>isvertical: bool = True</em>, <em>header_font: tecplot_lib.Font = &lt;tecplot_lib.Font object at 0x0000000008067B70&gt;</em>, <em>number_font: tecplot_lib.Font = &lt;tecplot_lib.Font object at 0x0000000008067BA8&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tecplot_lib.html#LegendSettings"><span class="viewcode-link">[исходный код]</span></a><a class="headerlink" href="#tecplot_lib.LegendSettings" title="Ссылка на это определение">¶</a></dt>
+<em class="property">class </em><code class="descclassname">tecplot_lib.</code><code class="descname">LegendSettings</code><span class="sig-paren">(</span><em>xy_position: tuple = (95</em>, <em>80)</em>, <em>rowspacing: float = 1.2</em>, <em>auto_levelskip: int = 1</em>, <em>isvertical: bool = True</em>, <em>header_font: tecplot_lib.Font = &lt;tecplot_lib.Font object at 0x0000000007F15128&gt;</em>, <em>number_font: tecplot_lib.Font = &lt;tecplot_lib.Font object at 0x0000000007F15160&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tecplot_lib.html#LegendSettings"><span class="viewcode-link">[исходный код]</span></a><a class="headerlink" href="#tecplot_lib.LegendSettings" title="Ссылка на это определение">¶</a></dt>
 <dd><blockquote>
 <div>Базовые классы: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></div></blockquote>
 <table class="docutils field-list" frame="void" rules="none">
@@ -454,7 +616,8 @@
 <dt id="tecplot_lib.PictureCreator.add_to_existing_macro">
 <code class="descname">add_to_existing_macro</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tecplot_lib.html#PictureCreator.add_to_existing_macro"><span class="viewcode-link">[исходный код]</span></a><a class="headerlink" href="#tecplot_lib.PictureCreator.add_to_existing_macro" title="Ссылка на это определение">¶</a></dt>
 <dd><p>Добавляет команды в существующий макрос. Если файла с макросом не существует, создает пустой файл
-и записывает в него команды.</p>
+и записывает в него команды. Если макрос, в который осуществляется запись, заканчивается командой
+&#8216;$!Quit&#8217;, то перед записью его содержимое удаляется.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />

@@ -4,10 +4,19 @@ import os
 
 # директория с изображениями
 image_dir = 'images'
+# имя файла с данными
 sourcefile_name = os.path.join(tecplot_dir, 'example.plt')
+# имя, под которым будет сохранени макрос
 macro_name = os.path.join(macros_dir, 'picture_creation.mcr')
+# имя директории, в которой содержаться .lay файлы с настройками изображения
+parse_files_dir = 'tecplot_layout_files_for_parsing'
 
 if __name__ == '__main__':
+    # создание экземпляра класса LayoutParser, который позволит считать некоторые настройки изображения,
+    # содержащиеся в файле с расширением .lay
+    parser = tecplot_lib.LayoutParser(os.path.join(parse_files_dir, 'long_sec_1.lay'))
+    # запуск парсинга
+    parser.run_parsing()
     # координаты точки, через которую проходит срез
     pos = (0., 0., 0.)
     # нормаль к плоскости среза
@@ -26,20 +35,21 @@ if __name__ == '__main__':
                                                  auto_levelskip=2)
     # задание настроик шрифтов для заголовков и подписей осей
     x_title_font = tecplot_lib.Font(font_family='Helvetica', is_bold=True, is_italic=False, height=5)
-    x_label_font = tecplot_lib.Font(font_family='Helvetica', is_bold=True, is_italic=False, height=5)
+    x_label_font = tecplot_lib.Font(font_family='Helvetica', is_bold=True, is_italic=False, height=2)
     y_title_font = tecplot_lib.Font(font_family='Helvetica', is_bold=True, is_italic=False, height=5)
-    y_label_font = tecplot_lib.Font(font_family='Helvetica', is_bold=True, is_italic=False, height=5)
+    y_label_font = tecplot_lib.Font(font_family='Helvetica', is_bold=True, is_italic=False, height=2)
 
     # создание экземпляра класса AxisSettings, в котором содержаться настройки для осей
-    axis_settings = tecplot_lib.AxisSettings(x_axis_var=1, y_axis_var=3, rect=(10, 10, 95, 80),
+    axis_settings = tecplot_lib.AxisSettings(x_axis_var=parser.x_axis_var, y_axis_var=parser.y_axis_var,
+                                             rect=parser.rect,
                                              x_line_pos=0., y_line_pos=0.,
                                              preserve_axis_length=False,
                                              x_title_font=x_title_font, x_label_font=x_label_font,
-                                             x_title_offset=3, x_label_offset=5, y_title_font=y_title_font,
-                                             y_label_font=y_label_font, y_title_offset=5, y_label_offset=3,
-                                             xlim=(0, 0.1), ylim=(0, 0.045))
+                                             x_title_offset=5, x_label_offset=2, y_title_font=y_title_font,
+                                             y_label_font=y_label_font, y_title_offset=5, y_label_offset=2,
+                                             xlim=parser.xlim, ylim=parser.ylim, x_to_y_ratio=parser.x_to_y_ratio)
     # создание экземпляра класса FrameSettings, в котором задаются настройки фрейма
-    frame_settings = tecplot_lib.FrameSettings(width=12, height=7)
+    frame_settings = tecplot_lib.FrameSettings(width=parser.frame_width, height=parser.frame_height)
     # создание экземпляра класса ColormapSettings, в котором содержаться настройки карты цветов
     colormap_settings1 = tecplot_lib.ColormapSettings(color_distribution=tecplot_lib.ColorDistribution.CONTINUOUS,
                                                       color_min=0, color_max=90)

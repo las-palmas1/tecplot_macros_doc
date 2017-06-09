@@ -56,8 +56,9 @@
 <span class="kn">import</span> <span class="nn">enum</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">re</span>
 
-<span class="n">__version__</span> <span class="o">=</span> <span class="s1">&#39;0.2&#39;</span>
+<span class="n">__version__</span> <span class="o">=</span> <span class="s1">&#39;0.3&#39;</span>
 <span class="n">__author__</span> <span class="o">=</span> <span class="s1">&#39;Alexander Zhigalkin&#39;</span>
 
 <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%(msg)s</span><span class="s1">&#39;</span><span class="p">)</span>
@@ -394,7 +395,8 @@
 
 
 <span class="k">def</span> <span class="nf">_get_go_to_2d_macro</span><span class="p">(</span><span class="n">x_axis_var</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">y_axis_var</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">x_line_pos</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">y_line_pos</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span>
-                        <span class="n">rect</span><span class="p">:</span> <span class="nb">tuple</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">90</span><span class="p">),</span> <span class="n">preserve_axis_length</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+                        <span class="n">rect</span><span class="p">:</span> <span class="nb">tuple</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">90</span><span class="p">),</span> <span class="n">x_to_y_ratio</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                        <span class="n">preserve_axis_length</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    :param x_axis_var: int \n</span>
 <span class="sd">        Номер переменной, откладываемой по горизонтальной оси</span>
@@ -407,6 +409,8 @@
 <span class="sd">    :param rect: tuple, optional \n</span>
 <span class="sd">        Определяет положение прямоугольника сетки на frame, rect=(x1, y1, x2, y2),</span>
 <span class="sd">        по умолчанию rect=(10, 10, 90, 90)</span>
+<span class="sd">    :param x_to_y_ratio: int, optional \n</span>
+<span class="sd">        Отношение масштаба на оси x к масштабу на оси y</span>
 <span class="sd">    :param preserve_axis_length: bool, optional \n</span>
 <span class="sd">        Сохраняемость масштаба осей при изменении их диапазона</span>
 <span class="sd">    :param kwargs: xlim, ylim (интервалы по осям x и y соотвественно), тип tuple; пример: xlim=(0,1), ylim=(1,2)</span>
@@ -416,6 +420,7 @@
               <span class="s2">&quot;$!TWODAXIS XDETAIL{VARNUM = </span><span class="si">%s</span><span class="s2">}</span><span class="se">\n</span><span class="s2">&quot;</span> \
               <span class="s2">&quot;$!TWODAXIS YDETAIL{VARNUM = </span><span class="si">%s</span><span class="s2">}</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">x_axis_var</span><span class="p">,</span> <span class="n">y_axis_var</span><span class="p">)</span>
     <span class="n">string3</span> <span class="o">=</span> <span class="s2">&quot;$!TWODAXIS</span><span class="se">\n</span><span class="s2">&quot;</span> \
+              <span class="s2">&quot;  DEPXTOYRATIO = </span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span> \
               <span class="s2">&quot;  GRIDAREA</span><span class="se">\n</span><span class="s2">&quot;</span> \
               <span class="s2">&quot;  {</span><span class="se">\n</span><span class="s2">&quot;</span> \
               <span class="s2">&quot;    EXTENTS</span><span class="se">\n</span><span class="s2">&quot;</span> \
@@ -429,7 +434,7 @@
               <span class="s2">&quot;$!TWODAXIS XDETAIL{AXISLINE{AXISALIGNMENT = WITHVIEWPORT}}</span><span class="se">\n</span><span class="s2">&quot;</span> \
               <span class="s2">&quot;$!TWODAXIS XDETAIL{AXISLINE{POSITION = </span><span class="si">%s</span><span class="s2">}}</span><span class="se">\n</span><span class="s2">&quot;</span> \
               <span class="s2">&quot;$!TWODAXIS YDETAIL{AXISLINE{AXISALIGNMENT = WITHVIEWPORT}}</span><span class="se">\n</span><span class="s2">&quot;</span> \
-              <span class="s2">&quot;$!TWODAXIS YDETAIL{AXISLINE{POSITION = </span><span class="si">%s</span><span class="s2">}}</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">rect</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">rect</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">rect</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">rect</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span>
+              <span class="s2">&quot;$!TWODAXIS YDETAIL{AXISLINE{POSITION = </span><span class="si">%s</span><span class="s2">}}</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">x_to_y_ratio</span><span class="p">,</span> <span class="n">rect</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">rect</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">rect</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">rect</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span>
                                                                  <span class="n">x_line_pos</span><span class="p">,</span> <span class="n">y_line_pos</span><span class="p">)</span>
     <span class="k">if</span> <span class="s1">&#39;xlim&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span> <span class="ow">and</span> <span class="s1">&#39;ylim&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
         <span class="n">string2</span> <span class="o">=</span> <span class="s2">&quot;$!TWODAXIS</span><span class="se">\n</span><span class="s2">&quot;</span> \
@@ -499,8 +504,8 @@
               <span class="s2">&quot;$!TWODAXIS XDETAIL{TICKLABEL{TEXTSHAPE{ISITALIC = </span><span class="si">%s</span><span class="s2">}}}</span><span class="se">\n</span><span class="s2">&quot;</span> \
               <span class="s2">&quot;$!TWODAXIS XDETAIL{TICKLABEL{TEXTSHAPE{ISBOLD = </span><span class="si">%s</span><span class="s2">}}}</span><span class="se">\n</span><span class="s2">&quot;</span> \
               <span class="s2">&quot;$!TWODAXIS XDETAIL{TICKLABEL{OFFSET = </span><span class="si">%s</span><span class="s2">}}</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">x_label_font</span><span class="o">.</span><span class="n">font_family</span><span class="p">,</span>
-                                                                           <span class="n">x_label_font</span><span class="o">.</span><span class="n">height</span><span class="p">,</span> <span class="n">x_label_font</span><span class="o">.</span><span class="n">is_italic</span><span class="p">,</span>
-                                                                           <span class="n">x_label_font</span><span class="o">.</span><span class="n">is_bold</span><span class="p">,</span> <span class="n">x_label_offset</span><span class="p">)</span>
+                                                                <span class="n">x_label_font</span><span class="o">.</span><span class="n">height</span><span class="p">,</span> <span class="n">x_label_font</span><span class="o">.</span><span class="n">is_italic</span><span class="p">,</span>
+                                                                <span class="n">x_label_font</span><span class="o">.</span><span class="n">is_bold</span><span class="p">,</span> <span class="n">x_label_offset</span><span class="p">)</span>
     <span class="n">y_title</span> <span class="o">=</span> <span class="s2">&quot;$!TWODAXIS YDETAIL{TITLE{TEXTSHAPE{FONTFAMILY = &#39;</span><span class="si">%s</span><span class="s2">&#39;}}}</span><span class="se">\n</span><span class="s2">&quot;</span> \
               <span class="s2">&quot;$!TWODAXIS YDETAIL{TITLE{TEXTSHAPE{HEIGHT =</span><span class="si">%s</span><span class="s2">}}}</span><span class="se">\n</span><span class="s2">&quot;</span> \
               <span class="s2">&quot;$!TWODAXIS YDETAIL{TITLE{TEXTSHAPE{ISITALIC = </span><span class="si">%s</span><span class="s2">}}}</span><span class="se">\n</span><span class="s2">&quot;</span> \
@@ -513,8 +518,8 @@
               <span class="s2">&quot;$!TWODAXIS YDETAIL{TICKLABEL{TEXTSHAPE{ISITALIC = </span><span class="si">%s</span><span class="s2">}}}</span><span class="se">\n</span><span class="s2">&quot;</span> \
               <span class="s2">&quot;$!TWODAXIS YDETAIL{TICKLABEL{TEXTSHAPE{ISBOLD = </span><span class="si">%s</span><span class="s2">}}}</span><span class="se">\n</span><span class="s2">&quot;</span> \
               <span class="s2">&quot;$!TWODAXIS YDETAIL{TICKLABEL{OFFSET = </span><span class="si">%s</span><span class="s2">}}</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">y_label_font</span><span class="o">.</span><span class="n">font_family</span><span class="p">,</span>
-                                                                           <span class="n">y_label_font</span><span class="o">.</span><span class="n">height</span><span class="p">,</span> <span class="n">y_label_font</span><span class="o">.</span><span class="n">is_italic</span><span class="p">,</span>
-                                                                           <span class="n">y_label_font</span><span class="o">.</span><span class="n">is_bold</span><span class="p">,</span> <span class="n">y_label_offset</span><span class="p">)</span>
+                                                                <span class="n">y_label_font</span><span class="o">.</span><span class="n">height</span><span class="p">,</span> <span class="n">y_label_font</span><span class="o">.</span><span class="n">is_italic</span><span class="p">,</span>
+                                                                <span class="n">y_label_font</span><span class="o">.</span><span class="n">is_bold</span><span class="p">,</span> <span class="n">y_label_offset</span><span class="p">)</span>
     <span class="n">result</span> <span class="o">=</span> <span class="n">x_title</span> <span class="o">+</span> <span class="n">x_label</span> <span class="o">+</span> <span class="n">y_title</span> <span class="o">+</span> <span class="n">y_label</span>
     <span class="k">return</span> <span class="n">result</span>
 
@@ -691,6 +696,165 @@
     <span class="k">return</span> <span class="n">result</span>
 
 
+<span class="k">class</span> <span class="nc">_LayoutParserDescriptor</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+
+    <span class="k">def</span> <span class="nf">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">owner</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> was not writen from layout&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span>
+
+    <span class="k">def</span> <span class="nf">__set__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
+
+
+<div class="viewcode-block" id="LayoutParser"><a class="viewcode-back" href="../API reference.html#tecplot_lib.LayoutParser">[документация]</a><span class="k">class</span> <span class="nc">LayoutParser</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Обеспечивает возможность парсинга .lay файлов и считывания некоторых настроек изображения, значения которых</span>
+<span class="sd">    сохраняются в следующие поля:</span>
+
+<span class="sd">    1. :param frame_width: float \n</span>
+<span class="sd">            Ширина фрейма.</span>
+<span class="sd">    2. :param frame_height: float \n</span>
+<span class="sd">            Высота фрейма.</span>
+<span class="sd">    3. :param x_y_axis_var: int \n</span>
+<span class="sd">            Номер переменной, откладываемой по оси X.</span>
+<span class="sd">    4. :param y_y_axis_var: int \n</span>
+<span class="sd">            Номер переменной, откладываемой по оси Y.</span>
+<span class="sd">    5. :param x_to_y_ratio: float \n</span>
+<span class="sd">            Отношение масштаба по оси X к масштабу по оси Y.</span>
+<span class="sd">    6. :param rect: tuple \n</span>
+<span class="sd">            Определяет положение прямоугольника сетки на frame, rect=(x1, y1, x2, y2).</span>
+<span class="sd">    7. :param xlim: tuple \n</span>
+<span class="sd">            Определяет интервал значений по оси X, xlim=(xmin, xmax).</span>
+<span class="sd">    8. :param ylim: tuple \n</span>
+<span class="sd">            Определяет интервал значений по оси Y, ylim=(ymin, ymax).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">frame_width</span> <span class="o">=</span> <span class="n">_LayoutParserDescriptor</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;frame_width&#39;</span><span class="p">)</span>
+    <span class="n">frame_height</span> <span class="o">=</span> <span class="n">_LayoutParserDescriptor</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;frame_height&#39;</span><span class="p">)</span>
+    <span class="n">x_axis_var</span> <span class="o">=</span> <span class="n">_LayoutParserDescriptor</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;x_axis_var&#39;</span><span class="p">)</span>
+    <span class="n">y_axis_var</span> <span class="o">=</span> <span class="n">_LayoutParserDescriptor</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;y_axis_var&#39;</span><span class="p">)</span>
+    <span class="n">x_to_y_ratio</span> <span class="o">=</span> <span class="n">_LayoutParserDescriptor</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;x_to_y_ratio&#39;</span><span class="p">)</span>
+    <span class="n">rect</span> <span class="o">=</span> <span class="n">_LayoutParserDescriptor</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;rect&#39;</span><span class="p">)</span>
+    <span class="n">xlim</span> <span class="o">=</span> <span class="n">_LayoutParserDescriptor</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;xlim&#39;</span><span class="p">)</span>
+    <span class="n">ylim</span> <span class="o">=</span> <span class="n">_LayoutParserDescriptor</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;ylim&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">layout_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param layout_name: str \n</span>
+<span class="sd">                Имя .lay файла, с которого необходимо считать настройки изображения.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layout_name</span> <span class="o">=</span> <span class="n">layout_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layout_content</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_frame_pattern</span> <span class="o">=</span> <span class="s2">&quot;\$!FRAMELAYOUT\s*</span><span class="se">\n</span><span class="s2">&quot;</span> \
+                              <span class="s2">&quot;\s*SHOWHEADER\s*=\s*\w+</span><span class="se">\n</span><span class="s2">&quot;</span> \
+                              <span class="s2">&quot;\s*HEADERCOLOR\s*=\s*\w+</span><span class="se">\n</span><span class="s2">&quot;</span> \
+                              <span class="s2">&quot;\s*XYPOS</span><span class="se">\n</span><span class="s2">&quot;</span> \
+                              <span class="s2">&quot;\s*{</span><span class="se">\n</span><span class="s2">&quot;</span> \
+                              <span class="s2">&quot;\s*X\s*=\s*\d+\.?\d*</span><span class="se">\n</span><span class="s2">&quot;</span> \
+                              <span class="s2">&quot;\s*Y\s*=\s*\d+\.?\d*</span><span class="se">\n</span><span class="s2">&quot;</span> \
+                              <span class="s2">&quot;\s*}</span><span class="se">\n</span><span class="s2">&quot;</span> \
+                              <span class="s2">&quot;\s*WIDTH\s*=\s*(\d+\.?\d*)</span><span class="se">\n</span><span class="s2">&quot;</span> \
+                              <span class="s2">&quot;\s*HEIGHT\s*=\s*(\d+\.?\d*)</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_axis_var_pattern</span> <span class="o">=</span> <span class="s2">&quot;\$!TWODAXIS </span><span class="se">\n</span><span class="s2">&quot;</span> \
+                                 <span class="s2">&quot;\s*XDETAIL</span><span class="se">\n</span><span class="s2">&quot;</span> \
+                                 <span class="s2">&quot;\s*{</span><span class="se">\n</span><span class="s2">&quot;</span> \
+                                 <span class="s2">&quot;\s*VARNUM\s*=\s*(\d+\.?\d*)</span><span class="se">\n</span><span class="s2">&quot;</span> \
+                                 <span class="s2">&quot;\s*}</span><span class="se">\n</span><span class="s2">&quot;</span> \
+                                 <span class="s2">&quot;\s*YDETAIL</span><span class="se">\n</span><span class="s2">&quot;</span> \
+                                 <span class="s2">&quot;\s*{</span><span class="se">\n</span><span class="s2">&quot;</span> \
+                                 <span class="s2">&quot;\s*VARNUM\s*=\s*(\d+\.?\d*)</span><span class="se">\n</span><span class="s2">&quot;</span> \
+                                 <span class="s2">&quot;\s*}</span><span class="se">\n</span><span class="s2">?&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_rect_pattern</span> <span class="o">=</span> <span class="s2">&quot;\$!TWODAXIS\s*</span><span class="se">\n</span><span class="s2">&quot;</span> \
+                             <span class="s2">&quot;\s*DEPXTOYRATIO\s*=\s*(\d+\.?\d*)</span><span class="se">\n</span><span class="s2">&quot;</span> \
+                             <span class="s2">&quot;\s*VIEWPORTPOSITION</span><span class="se">\n</span><span class="s2">&quot;</span> \
+                             <span class="s2">&quot;\s*{</span><span class="se">\n</span><span class="s2">&quot;</span> \
+                             <span class="s2">&quot;\s*X1\s*=\s*(\d+\.?\d*)</span><span class="se">\n</span><span class="s2">&quot;</span> \
+                             <span class="s2">&quot;\s*Y1\s*=\s*(\d+\.?\d*)</span><span class="se">\n</span><span class="s2">&quot;</span> \
+                             <span class="s2">&quot;\s*X2\s*=\s*(\d+\.?\d*)</span><span class="se">\n</span><span class="s2">&quot;</span> \
+                             <span class="s2">&quot;\s*Y2\s*=\s*(\d+\.?\d*)</span><span class="se">\n</span><span class="s2">&quot;</span> \
+                             <span class="s2">&quot;\s*}</span><span class="se">\n</span><span class="s2">?&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_xlim_pattern</span> <span class="o">=</span> <span class="s2">&quot;\$!TWODAXIS\s*</span><span class="se">\n</span><span class="s2">&quot;</span> \
+                             <span class="s2">&quot;\s*XDETAIL</span><span class="se">\n</span><span class="s2">&quot;</span> \
+                             <span class="s2">&quot;\s*{</span><span class="se">\n</span><span class="s2">&quot;</span> \
+                             <span class="s2">&quot;\s*RANGEMIN\s*=\s*(-*\d+\.?\d*)</span><span class="se">\n</span><span class="s2">&quot;</span> \
+                             <span class="s2">&quot;\s*RANGEMAX\s*=\s*(-*\d+\.?\d*)</span><span class="se">\n</span><span class="s2">&quot;</span> \
+                             <span class="s2">&quot;\s*GRSPACING\s*=\s*\d+\.?\d*</span><span class="se">\n</span><span class="s2">&quot;</span> \
+                             <span class="s2">&quot;\s*}</span><span class="se">\n</span><span class="s2">?&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ylim_pattern</span> <span class="o">=</span> <span class="s2">&quot;\$!TWODAXIS\s*</span><span class="se">\n</span><span class="s2">&quot;</span> \
+                             <span class="s2">&quot;\s*YDETAIL</span><span class="se">\n</span><span class="s2">&quot;</span> \
+                             <span class="s2">&quot;\s*{</span><span class="se">\n</span><span class="s2">&quot;</span> \
+                             <span class="s2">&quot;\s*RANGEMIN\s*=\s*(-*\d+\.?\d*)</span><span class="se">\n</span><span class="s2">&quot;</span> \
+                             <span class="s2">&quot;\s*RANGEMAX\s*=\s*(-*\d+\.?\d*)</span><span class="se">\n</span><span class="s2">&quot;</span> \
+                             <span class="s2">&quot;\s*GRSPACING\s*=\s*\d+\.?\d*</span><span class="se">\n</span><span class="s2">&quot;</span> \
+                             <span class="s2">&quot;\s*}</span><span class="se">\n</span><span class="s2">?&quot;</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_get_frame_size</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">frame_pattern</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">layout_content</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Get frame size&#39;</span><span class="p">)</span>
+        <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">frame_pattern</span><span class="p">,</span> <span class="n">layout_content</span><span class="p">)</span>
+        <span class="n">frame_width</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">frame_height</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">frame_width</span><span class="p">,</span> <span class="n">frame_height</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_get_axis_var_numbers</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">axis_var_pattern</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">layout_content</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Get axis varnumbers&#39;</span><span class="p">)</span>
+        <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">axis_var_pattern</span><span class="p">,</span> <span class="n">layout_content</span><span class="p">)</span>
+        <span class="n">x_axis_var</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">y_axis_var</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">x_axis_var</span><span class="p">,</span> <span class="n">y_axis_var</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_get_rect</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">rect_pattern</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">layout_content</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Get rectangle size&#39;</span><span class="p">)</span>
+        <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">rect_pattern</span><span class="p">,</span> <span class="n">layout_content</span><span class="p">)</span>
+        <span class="n">x_to_y_ratio</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">x1</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+        <span class="n">y1</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+        <span class="n">x2</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+        <span class="n">y2</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
+        <span class="n">rect</span> <span class="o">=</span> <span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x_to_y_ratio</span><span class="p">,</span> <span class="n">rect</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_get_xlim</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">xlim_pattern</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">layout_content</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Get xlim&#39;</span><span class="p">)</span>
+        <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">xlim_pattern</span><span class="p">,</span> <span class="n">layout_content</span><span class="p">)</span>
+        <span class="nb">min</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+        <span class="nb">max</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+        <span class="k">return</span> <span class="nb">min</span><span class="p">,</span> <span class="nb">max</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_get_ylim</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">ylim_pattern</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">layout_content</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Get ylim&#39;</span><span class="p">)</span>
+        <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">ylim_pattern</span><span class="p">,</span> <span class="n">layout_content</span><span class="p">)</span>
+        <span class="nb">min</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+        <span class="nb">max</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+        <span class="k">return</span> <span class="nb">min</span><span class="p">,</span> <span class="nb">max</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_get_layout_content</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">layout_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Reading layout file&#39;</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">layout_name</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+            <span class="n">content</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">content</span>
+
+<div class="viewcode-block" id="LayoutParser.run_parsing"><a class="viewcode-back" href="../API reference.html#tecplot_lib.LayoutParser.run_parsing">[документация]</a>    <span class="k">def</span> <span class="nf">run_parsing</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;START PARSING&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layout_content</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_layout_content</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">layout_name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frame_width</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">frame_height</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_frame_size</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_frame_pattern</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">layout_content</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x_axis_var</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_axis_var</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_axis_var_numbers</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_axis_var_pattern</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">layout_content</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x_to_y_ratio</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rect</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_rect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_rect_pattern</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">layout_content</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">xlim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_xlim</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_xlim_pattern</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">layout_content</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ylim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_ylim</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_ylim_pattern</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">layout_content</span><span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;FINISH PARSING&#39;</span><span class="p">)</span></div></div>
+
+
 <div class="viewcode-block" id="FrameSettings"><a class="viewcode-back" href="../API reference.html#tecplot_lib.FrameSettings">[документация]</a><span class="k">class</span> <span class="nc">FrameSettings</span><span class="p">:</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">width</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span> <span class="n">height</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="mi">8</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -779,7 +943,7 @@
 
 <div class="viewcode-block" id="AxisSettings"><a class="viewcode-back" href="../API reference.html#tecplot_lib.AxisSettings">[документация]</a><span class="k">class</span> <span class="nc">AxisSettings</span><span class="p">:</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x_axis_var</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">y_axis_var</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">rect</span><span class="p">:</span> <span class="nb">tuple</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">90</span><span class="p">),</span> <span class="n">x_line_pos</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-                 <span class="n">y_line_pos</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">preserve_axis_length</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+                 <span class="n">y_line_pos</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">x_to_y_ratio</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">preserve_axis_length</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
                  <span class="n">x_title_font</span><span class="p">:</span> <span class="n">Font</span> <span class="o">=</span> <span class="n">Font</span><span class="p">(),</span> <span class="n">x_label_font</span><span class="p">:</span> <span class="n">Font</span> <span class="o">=</span> <span class="n">Font</span><span class="p">(),</span> <span class="n">x_title_offset</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="mf">5.</span><span class="p">,</span>
                  <span class="n">x_label_offset</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.</span><span class="p">,</span> <span class="n">y_title_font</span><span class="p">:</span> <span class="n">Font</span> <span class="o">=</span> <span class="n">Font</span><span class="p">(),</span> <span class="n">y_label_font</span><span class="p">:</span> <span class="n">Font</span> <span class="o">=</span> <span class="n">Font</span><span class="p">(),</span>
                  <span class="n">y_title_offset</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="mf">5.</span><span class="p">,</span> <span class="n">y_label_offset</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -797,6 +961,8 @@
 <span class="sd">            Позиция горизонтальной оси по вертикали</span>
 <span class="sd">        :param y_line_pos: float \n</span>
 <span class="sd">            Позиция вертикальной оси по горизонтали \n</span>
+<span class="sd">        :param x_to_y_ratio: int, optional \n</span>
+<span class="sd">            Отношение масштаба на оси x к масштабу на оси y</span>
 <span class="sd">        :param x_title_font: Font, optional \n</span>
 <span class="sd">            экземпляр класса Font, содержащий настройки шрифта для заголовка оси x</span>
 <span class="sd">        :param x_label_font: Font, optional \n</span>
@@ -818,6 +984,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">x_axis_var</span> <span class="o">=</span> <span class="n">x_axis_var</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">y_axis_var</span> <span class="o">=</span> <span class="n">y_axis_var</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rect</span> <span class="o">=</span> <span class="n">rect</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x_to_y_ratio</span> <span class="o">=</span> <span class="n">x_to_y_ratio</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">preserve_axis_scale</span> <span class="o">=</span> <span class="n">preserve_axis_length</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">x_line_pos</span> <span class="o">=</span> <span class="n">x_line_pos</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">y_line_pos</span> <span class="o">=</span> <span class="n">y_line_pos</span>
@@ -896,7 +1063,7 @@
     <span class="n">extract_slice</span> <span class="o">=</span> <span class="n">_get_extract_slice_command</span><span class="p">()</span>
     <span class="n">show_contour</span> <span class="o">=</span> <span class="n">_get_show_contour_command</span><span class="p">()</span>
     <span class="n">go_to_2d</span> <span class="o">=</span> <span class="n">_get_go_to_2d_macro</span><span class="p">(</span><span class="n">axis_settings</span><span class="o">.</span><span class="n">x_axis_var</span><span class="p">,</span> <span class="n">axis_settings</span><span class="o">.</span><span class="n">y_axis_var</span><span class="p">,</span> <span class="n">axis_settings</span><span class="o">.</span><span class="n">x_line_pos</span><span class="p">,</span>
-                                   <span class="n">axis_settings</span><span class="o">.</span><span class="n">y_line_pos</span><span class="p">,</span> <span class="n">axis_settings</span><span class="o">.</span><span class="n">rect</span><span class="p">,</span>
+                                   <span class="n">axis_settings</span><span class="o">.</span><span class="n">y_line_pos</span><span class="p">,</span> <span class="n">axis_settings</span><span class="o">.</span><span class="n">rect</span><span class="p">,</span> <span class="n">axis_settings</span><span class="o">.</span><span class="n">x_to_y_ratio</span><span class="p">,</span>
                                    <span class="n">axis_settings</span><span class="o">.</span><span class="n">preserve_axis_scale</span><span class="p">,</span> <span class="o">**</span><span class="n">axis_settings</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="n">axis_font_settings</span> <span class="o">=</span> <span class="n">_get_axis_font_settings</span><span class="p">(</span><span class="n">axis_settings</span><span class="o">.</span><span class="n">x_title_font</span><span class="p">,</span> <span class="n">axis_settings</span><span class="o">.</span><span class="n">x_label_font</span><span class="p">,</span>
                                                  <span class="n">axis_settings</span><span class="o">.</span><span class="n">x_title_offset</span><span class="p">,</span> <span class="n">axis_settings</span><span class="o">.</span><span class="n">x_label_offset</span><span class="p">,</span>
@@ -1026,7 +1193,8 @@
 <div class="viewcode-block" id="PictureCreator.add_to_existing_macro"><a class="viewcode-back" href="../API reference.html#tecplot_lib.PictureCreator.add_to_existing_macro">[документация]</a>    <span class="k">def</span> <span class="nf">add_to_existing_macro</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Добавляет команды в существующий макрос. Если файла с макросом не существует, создает пустой файл</span>
-<span class="sd">        и записывает в него команды.</span>
+<span class="sd">        и записывает в него команды. Если макрос, в который осуществляется запись, заканчивается командой</span>
+<span class="sd">        &#39;$!Quit&#39;, то перед записью его содержимое удаляется.</span>
 
 <span class="sd">        :return: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
