@@ -734,15 +734,6 @@
 <span class="sd">            Определяет интервал значений по оси Y, ylim=(ymin, ymax).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">frame_width</span> <span class="o">=</span> <span class="n">_LayoutParserDescriptor</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;frame_width&#39;</span><span class="p">)</span>
-    <span class="n">frame_height</span> <span class="o">=</span> <span class="n">_LayoutParserDescriptor</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;frame_height&#39;</span><span class="p">)</span>
-    <span class="n">x_axis_var</span> <span class="o">=</span> <span class="n">_LayoutParserDescriptor</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;x_axis_var&#39;</span><span class="p">)</span>
-    <span class="n">y_axis_var</span> <span class="o">=</span> <span class="n">_LayoutParserDescriptor</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;y_axis_var&#39;</span><span class="p">)</span>
-    <span class="n">x_to_y_ratio</span> <span class="o">=</span> <span class="n">_LayoutParserDescriptor</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;x_to_y_ratio&#39;</span><span class="p">)</span>
-    <span class="n">rect</span> <span class="o">=</span> <span class="n">_LayoutParserDescriptor</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;rect&#39;</span><span class="p">)</span>
-    <span class="n">xlim</span> <span class="o">=</span> <span class="n">_LayoutParserDescriptor</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;xlim&#39;</span><span class="p">)</span>
-    <span class="n">ylim</span> <span class="o">=</span> <span class="n">_LayoutParserDescriptor</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;ylim&#39;</span><span class="p">)</span>
-
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">layout_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :param layout_name: str \n</span>
@@ -750,6 +741,14 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">layout_name</span> <span class="o">=</span> <span class="n">layout_name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">layout_content</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frame_width</span> <span class="o">=</span> <span class="n">_LayoutParserDescriptor</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;frame_width&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frame_height</span> <span class="o">=</span> <span class="n">_LayoutParserDescriptor</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;frame_height&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x_axis_var</span> <span class="o">=</span> <span class="n">_LayoutParserDescriptor</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;x_axis_var&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y_axis_var</span> <span class="o">=</span> <span class="n">_LayoutParserDescriptor</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;y_axis_var&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x_to_y_ratio</span> <span class="o">=</span> <span class="n">_LayoutParserDescriptor</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;x_to_y_ratio&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rect</span> <span class="o">=</span> <span class="n">_LayoutParserDescriptor</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;rect&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">xlim</span> <span class="o">=</span> <span class="n">_LayoutParserDescriptor</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;xlim&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ylim</span> <span class="o">=</span> <span class="n">_LayoutParserDescriptor</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;ylim&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_frame_pattern</span> <span class="o">=</span> <span class="s2">&quot;\$!FRAMELAYOUT\s*</span><span class="se">\n</span><span class="s2">&quot;</span> \
                               <span class="s2">&quot;\s*SHOWHEADER\s*=\s*\w+</span><span class="se">\n</span><span class="s2">&quot;</span> \
                               <span class="s2">&quot;\s*HEADERCOLOR\s*=\s*\w+</span><span class="se">\n</span><span class="s2">&quot;</span> \
@@ -827,6 +826,7 @@
         <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">xlim_pattern</span><span class="p">,</span> <span class="n">layout_content</span><span class="p">)</span>
         <span class="nb">min</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
         <span class="nb">max</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;xlim = (</span><span class="si">%s</span><span class="s1">, </span><span class="si">%s</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">min</span><span class="p">,</span> <span class="nb">max</span><span class="p">))</span>
         <span class="k">return</span> <span class="nb">min</span><span class="p">,</span> <span class="nb">max</span>
 
     <span class="nd">@classmethod</span>
@@ -835,11 +835,12 @@
         <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">ylim_pattern</span><span class="p">,</span> <span class="n">layout_content</span><span class="p">)</span>
         <span class="nb">min</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
         <span class="nb">max</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;ylim = (</span><span class="si">%s</span><span class="s1">, </span><span class="si">%s</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">min</span><span class="p">,</span> <span class="nb">max</span><span class="p">))</span>
         <span class="k">return</span> <span class="nb">min</span><span class="p">,</span> <span class="nb">max</span>
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">_get_layout_content</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">layout_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Reading layout file&#39;</span><span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Reading layout file &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span> <span class="n">layout_name</span> <span class="p">)</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">layout_name</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
             <span class="n">content</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">content</span>
