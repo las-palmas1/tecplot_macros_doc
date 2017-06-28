@@ -49,7 +49,7 @@ if __name__ == '__main__':
                                              y_label_font=y_label_font, y_title_offset=5, y_label_offset=2,
                                              xlim=parser.xlim, ylim=parser.ylim, x_to_y_ratio=parser.x_to_y_ratio)
     # создание экземпляра класса FrameSettings, в котором задаются настройки фрейма
-    frame_settings = tecplot_lib.FrameSettings(width=parser.frame_width, height=parser.frame_height)
+    frame_settings = tecplot_lib.FrameSettings(width=parser.frame_width, height=parser.frame_height, show_border=False)
     # создание экземпляра класса ColormapSettings, в котором содержаться настройки карты цветов
     colormap_settings1 = tecplot_lib.ColormapSettings(color_distribution=tecplot_lib.ColorDistribution.CONTINUOUS,
                                                       color_min=0, color_max=90)
