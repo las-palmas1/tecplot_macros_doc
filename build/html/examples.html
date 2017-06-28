@@ -28,7 +28,7 @@
     <link rel="index" title="Алфавитный указатель" href="genindex.html" />
     <link rel="search" title="Поиск" href="search.html" />
     <link rel="next" title="API reference" href="API reference.html" />
-    <link rel="prev" title="Introduction" href="introduction.html" /> 
+    <link rel="prev" title="&lt;no title&gt;" href="Changes in current version.html" /> 
   </head>
   <body role="document">
     <div class="related" role="navigation" aria-label="related navigation">
@@ -44,7 +44,7 @@
           <a href="API reference.html" title="API reference"
              accesskey="N">вперёд</a> |</li>
         <li class="right" >
-          <a href="introduction.html" title="Introduction"
+          <a href="Changes in current version.html" title="&lt;no title&gt;"
              accesskey="P">назад</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">Документация tecplot_lib </a> &#187;</li> 
       </ul>
@@ -207,6 +207,8 @@ pandas.DataFrame, список которых содержится в поле f
 </div>
 <div class="section" id="lay">
 <h2>Создание изображений срезов и парсинг .lay файлов<a class="headerlink" href="#lay" title="Ссылка на этот заголовок">¶</a></h2>
+<div class="section" id="advanced-way">
+<h3>Advanced way<a class="headerlink" href="#advanced-way" title="Ссылка на этот заголовок">¶</a></h3>
 <p>Осуществляется с помощью класса <a class="reference internal" href="API reference.html#tecplot_lib.PictureCreator" title="tecplot_lib.PictureCreator"><code class="xref any py py-class docutils literal"><span class="pre">PictureCreator</span></code></a>. Для его инициализации требуются экземпляры классов <a class="reference internal" href="API reference.html#tecplot_lib.SliceSettings" title="tecplot_lib.SliceSettings"><code class="xref any py py-class docutils literal"><span class="pre">SliceSettings</span></code></a>, <a class="reference internal" href="API reference.html#tecplot_lib.LevelSettings" title="tecplot_lib.LevelSettings"><code class="xref any py py-class docutils literal"><span class="pre">LevelSettings</span></code></a>, <a class="reference internal" href="API reference.html#tecplot_lib.LegendSettings" title="tecplot_lib.LegendSettings"><code class="xref any py py-class docutils literal"><span class="pre">LegendSettings</span></code></a>,
 <a class="reference internal" href="API reference.html#tecplot_lib.AxisSettings" title="tecplot_lib.AxisSettings"><code class="xref any py py-class docutils literal"><span class="pre">AxisSettings</span></code></a>, <a class="reference internal" href="API reference.html#tecplot_lib.FrameSettings" title="tecplot_lib.FrameSettings"><code class="xref any py py-class docutils literal"><span class="pre">FrameSettings</span></code></a>, <a class="reference internal" href="API reference.html#tecplot_lib.ColormapSettings" title="tecplot_lib.ColormapSettings"><code class="xref any py py-class docutils literal"><span class="pre">ColormapSettings</span></code></a>, <a class="reference internal" href="API reference.html#tecplot_lib.ExportSettings" title="tecplot_lib.ExportSettings"><code class="xref any py py-class docutils literal"><span class="pre">ExportSettings</span></code></a> и <a class="reference internal" href="API reference.html#tecplot_lib.TicksSettings" title="tecplot_lib.TicksSettings"><code class="xref any py py-class docutils literal"><span class="pre">TicksSettings</span></code></a>. Значения интервалов по осям, содержащихся в keyword xlim и ylim инициализатора класса <a class="reference internal" href="API reference.html#tecplot_lib.AxisSettings" title="tecplot_lib.AxisSettings"><code class="xref any py py-class docutils literal"><span class="pre">AxisSettings</span></code></a>, являются значенями, подставлямыми в команду скриптивого языка TecPlot, устанавливающую величину интервалов по осям. При этом они могут не совпадать со значениями интервалов на результирующей картинке, так как на их величину также влияют команды, устанавливающие размер осей по отношению к размеру фрейма и размер самого фрейма. Экземпляр класса <a class="reference internal" href="API reference.html#tecplot_lib.PictureCreator" title="tecplot_lib.PictureCreator"><code class="xref any py py-class docutils literal"><span class="pre">PictureCreator</span></code></a> содержит два метода: <a class="reference internal" href="API reference.html#tecplot_lib.PictureCreator.run_creation" title="tecplot_lib.PictureCreator.run_creation"><code class="xref any py py-meth docutils literal"><span class="pre">run_creation</span></code></a> и <a class="reference internal" href="API reference.html#tecplot_lib.PictureCreator.add_to_existing_macro" title="tecplot_lib.PictureCreator.add_to_existing_macro"><code class="xref any py py-meth docutils literal"><span class="pre">add_to_existing_macro</span></code></a>. Первый из них запускает уже существующий макрос, или, если макрос пуст или его вообще нет, создает макрос и записывает в него команды. Второй - добавляет команды в существующий макрос. При этом, если макрос закаканчивается командой &#8216;$!Quit&#8217;, содержимое макроса перед записью удаляется.</p>
 <p>При создании изображений можно пользоваться настройками, содеражащимися в .lay файле. Для их считывания необходим парсинг .lay файла, который может быть осуществлен с помощью экземпляра класса <a class="reference internal" href="API reference.html#tecplot_lib.LayoutParser" title="tecplot_lib.LayoutParser"><code class="xref any py py-class docutils literal"><span class="pre">LayoutParser</span></code></a>.</p>
@@ -276,7 +278,7 @@ pandas.DataFrame, список которых содержится в поле f
     <span class="n">picture_creator1</span> <span class="o">=</span> <span class="n">tecplot_lib</span><span class="o">.</span><span class="n">PictureCreator</span><span class="p">(</span><span class="n">sourcefile_name</span><span class="p">,</span>
                                                   <span class="n">macro_name</span><span class="p">,</span> <span class="n">slice_settings</span><span class="p">,</span>
                                                   <span class="n">level_settings1</span><span class="p">,</span> <span class="n">legend_settings</span><span class="p">,</span> <span class="n">colormap_settings1</span><span class="p">,</span> <span class="n">axis_settings</span><span class="p">,</span>
-                                                  <span class="n">ticks_settings</span><span class="p">,</span> <span class="n">export_settings1</span><span class="p">,</span> <span class="n">frame_settings</span><span class="p">)</span>
+                                                  <span class="n">export_settings1</span><span class="p">,</span> <span class="n">frame_settings</span><span class="p">,</span> <span class="n">ticks_settings</span><span class="p">)</span>
     <span class="c1"># создание макроса и его запись в него команд для создания изображения</span>
     <span class="n">picture_creator1</span><span class="o">.</span><span class="n">add_to_existing_macro</span><span class="p">()</span>
 
@@ -291,13 +293,13 @@ pandas.DataFrame, список которых содержится в поле f
     <span class="n">picture_creator2</span> <span class="o">=</span> <span class="n">tecplot_lib</span><span class="o">.</span><span class="n">PictureCreator</span><span class="p">(</span><span class="n">sourcefile_name</span><span class="p">,</span>
                                                   <span class="n">macro_name</span><span class="p">,</span> <span class="n">slice_settings</span><span class="p">,</span>
                                                   <span class="n">level_settings2</span><span class="p">,</span> <span class="n">legend_settings</span><span class="p">,</span> <span class="n">colormap_settings2</span><span class="p">,</span> <span class="n">axis_settings</span><span class="p">,</span>
-                                                  <span class="n">ticks_settings</span><span class="p">,</span> <span class="n">export_settings2</span><span class="p">,</span> <span class="n">frame_settings</span><span class="p">)</span>
+                                                  <span class="n">export_settings2</span><span class="p">,</span> <span class="n">frame_settings</span><span class="p">,</span> <span class="n">ticks_settings</span><span class="p">)</span>
     <span class="c1"># добавление команд для создания второго изображения в уже существующий файл макроса</span>
     <span class="n">picture_creator2</span><span class="o">.</span><span class="n">add_to_existing_macro</span><span class="p">()</span>
     <span class="c1"># запуск макроса</span>
     <span class="n">picture_creator2</span><span class="o">.</span><span class="n">run_creation</span><span class="p">()</span>
 
-    <span class="c1"># в результате запуска скрипта в папке images появится файл U_long.png</span>
+    <span class="c1"># в результате запуска скрипта в папке images появится файлы U_long.png и W_long.png</span>
 </pre></div>
 </div>
 <p>В результате выполнения скрипта создаются следующие изображения.</p>
@@ -308,6 +310,75 @@ pandas.DataFrame, список которых содержится в поле f
 <div class="figure align-center" id="id7">
 <a class="reference internal image-reference" href="_images/W_long.png"><img alt="_images/W_long.png" src="_images/W_long.png" style="width: 600.0px; height: 417.3px;" /></a>
 <p class="caption"><span class="caption-text">Полученное изображение распределения вертикальной составляющей скорости в продольном сечении</span></p>
+</div>
+</div>
+<div class="section" id="simple-way">
+<h3>Simple way<a class="headerlink" href="#simple-way" title="Ссылка на этот заголовок">¶</a></h3>
+<p>Если не задавать все настройки, которые имеют значения по умолчанию, то объем кода получится заметно меньше. Например, можно вообще не создавать экземпляры классов <a class="reference internal" href="API reference.html#tecplot_lib.FrameSettings" title="tecplot_lib.FrameSettings"><code class="xref any py py-class docutils literal"><span class="pre">FrameSettings</span></code></a>, <a class="reference internal" href="API reference.html#tecplot_lib.TicksSettings" title="tecplot_lib.TicksSettings"><code class="xref any py py-class docutils literal"><span class="pre">TicksSettings</span></code></a> и <a class="reference internal" href="API reference.html#tecplot_lib.Font" title="tecplot_lib.Font"><code class="xref any py py-class docutils literal"><span class="pre">Font</span></code></a>. Настройки, содержащиеся в них, не будут задаваться в файле макроса, а элементы изображения, за которые они отвечают, будут настраиваться TecPlot&#8217;ом автоматически.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">tecplot_lib</span>
+<span class="kn">from</span> <span class="nn">tecplot_data_files_creation</span> <span class="k">import</span> <span class="n">tecplot_dir</span><span class="p">,</span> <span class="n">macros_dir</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="c1"># директория с изображениями</span>
+<span class="n">image_dir</span> <span class="o">=</span> <span class="s1">&#39;images&#39;</span>
+<span class="c1"># имя файла с данными</span>
+<span class="n">sourcefile_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tecplot_dir</span><span class="p">,</span> <span class="s1">&#39;example.plt&#39;</span><span class="p">)</span>
+<span class="c1"># имя, под которым будет сохранени макрос</span>
+<span class="n">macro_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">macros_dir</span><span class="p">,</span> <span class="s1">&#39;picture_creation_simple_way.mcr&#39;</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="c1"># координаты точки, через которую проходит срез</span>
+    <span class="n">pos</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">)</span>
+    <span class="c1"># нормаль к плоскости среза</span>
+    <span class="n">normal</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="c1"># создание экземпляра класса SliceSettings, в котором содержаться настройки среза</span>
+    <span class="n">slice_settings</span> <span class="o">=</span> <span class="n">tecplot_lib</span><span class="o">.</span><span class="n">SliceSettings</span><span class="p">(</span><span class="n">slice_type</span><span class="o">=</span><span class="n">tecplot_lib</span><span class="o">.</span><span class="n">SliceType</span><span class="o">.</span><span class="n">ARBITRARY</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="n">pos</span><span class="p">,</span>
+                                               <span class="n">normal</span><span class="o">=</span><span class="n">normal</span><span class="p">)</span>
+    <span class="c1"># создание экземляра класса LevelSettings, в котором содержаться настройки уровней</span>
+    <span class="n">level_settings1</span> <span class="o">=</span> <span class="n">tecplot_lib</span><span class="o">.</span><span class="n">LevelSettings</span><span class="p">(</span><span class="n">variable_number</span><span class="o">=</span><span class="mi">19</span><span class="p">,</span> <span class="n">min_level</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_level</span><span class="o">=</span><span class="mi">90</span><span class="p">,</span> <span class="n">num_levels</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+    <span class="c1"># создание экземпляра класса LegendSettings, в которм содержаться настройки легенды</span>
+    <span class="n">legend_settings</span> <span class="o">=</span> <span class="n">tecplot_lib</span><span class="o">.</span><span class="n">LegendSettings</span><span class="p">(</span><span class="n">xy_position</span><span class="o">=</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">90</span><span class="p">))</span>
+
+    <span class="c1"># создание экземпляра класса AxisSettings, в котором содержаться настройки для осей</span>
+    <span class="n">axis_settings</span> <span class="o">=</span> <span class="n">tecplot_lib</span><span class="o">.</span><span class="n">AxisSettings</span><span class="p">(</span><span class="n">x_axis_var</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">y_axis_var</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+    <span class="c1"># создание экземпляра класса ColormapSettings, в котором содержаться настройки карты цветов</span>
+    <span class="n">colormap_settings1</span> <span class="o">=</span> <span class="n">tecplot_lib</span><span class="o">.</span><span class="n">ColormapSettings</span><span class="p">(</span><span class="n">color_distribution</span><span class="o">=</span><span class="n">tecplot_lib</span><span class="o">.</span><span class="n">ColorDistribution</span><span class="o">.</span><span class="n">CONTINUOUS</span><span class="p">,</span>
+                                                      <span class="n">color_min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">color_max</span><span class="o">=</span><span class="mi">90</span><span class="p">)</span>
+    <span class="c1"># создание экземпляра класса ExportSettings, в котором содержаться настройки экспорта в формат png</span>
+    <span class="n">export_settings1</span> <span class="o">=</span> <span class="n">tecplot_lib</span><span class="o">.</span><span class="n">ExportSettings</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">image_dir</span><span class="p">,</span> <span class="s1">&#39;U_long_simple_way.png&#39;</span><span class="p">),</span> <span class="n">imagewidth</span><span class="o">=</span><span class="mi">2000</span><span class="p">)</span>
+
+    <span class="c1"># создание экземпляра класса PictureCreator, генерирующего макрос для создания картинок</span>
+    <span class="n">picture_creator1</span> <span class="o">=</span> <span class="n">tecplot_lib</span><span class="o">.</span><span class="n">PictureCreator</span><span class="p">(</span><span class="n">sourcefile_name</span><span class="p">,</span> <span class="n">macro_name</span><span class="p">,</span> <span class="n">slice_settings</span><span class="p">,</span> <span class="n">level_settings1</span><span class="p">,</span>
+                                                  <span class="n">legend_settings</span><span class="p">,</span> <span class="n">colormap_settings1</span><span class="p">,</span> <span class="n">axis_settings</span><span class="p">,</span> <span class="n">export_settings1</span><span class="p">)</span>
+    <span class="c1"># создание макроса и его запись в него команд для создания изображения</span>
+    <span class="n">picture_creator1</span><span class="o">.</span><span class="n">add_to_existing_macro</span><span class="p">()</span>
+
+    <span class="c1"># изменение настроек уровней легенды и цветов</span>
+    <span class="n">picture_creator1</span><span class="o">.</span><span class="n">level_settings</span><span class="o">.</span><span class="n">variable_number</span> <span class="o">=</span> <span class="mi">21</span>
+    <span class="n">picture_creator1</span><span class="o">.</span><span class="n">level_settings</span><span class="o">.</span><span class="n">min_level</span> <span class="o">=</span> <span class="o">-</span><span class="mi">30</span>
+    <span class="n">picture_creator1</span><span class="o">.</span><span class="n">level_settings</span><span class="o">.</span><span class="n">max_level</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">picture_creator1</span><span class="o">.</span><span class="n">level_settings</span><span class="o">.</span><span class="n">num_levels</span> <span class="o">=</span> <span class="mi">16</span>
+    <span class="n">picture_creator1</span><span class="o">.</span><span class="n">colormap_settings</span><span class="o">.</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;color_min&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">30</span>
+    <span class="n">picture_creator1</span><span class="o">.</span><span class="n">colormap_settings</span><span class="o">.</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;color_max&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="c1"># имя, под которым будет сохранено изображение</span>
+    <span class="n">picture_creator1</span><span class="o">.</span><span class="n">export_settings</span><span class="o">.</span><span class="n">exportfname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">image_dir</span><span class="p">,</span> <span class="s1">&#39;W_long_simple_way.png&#39;</span><span class="p">)</span>
+
+    <span class="n">picture_creator1</span><span class="o">.</span><span class="n">add_to_existing_macro</span><span class="p">()</span>
+    <span class="n">picture_creator1</span><span class="o">.</span><span class="n">run_creation</span><span class="p">()</span>
+
+    <span class="c1"># в результате запуска скрипта в папке images появится файлы U_long_simple_way.png и W_long_simple_way.png</span>
+</pre></div>
+</div>
+<p>В результате выполнения скрипта создаются следующие изображения.</p>
+<div class="figure align-center" id="id8">
+<a class="reference internal image-reference" href="_images/U_long_simple_way.png"><img alt="_images/U_long_simple_way.png" src="_images/U_long_simple_way.png" style="width: 600.0px; height: 533.4px;" /></a>
+<p class="caption"><span class="caption-text">Полученное изображение распределения продольной составляющей скорости в продольном сечении</span></p>
+</div>
+<div class="figure align-center" id="id9">
+<a class="reference internal image-reference" href="_images/W_long_simple_way.png"><img alt="_images/W_long_simple_way.png" src="_images/W_long_simple_way.png" style="width: 600.0px; height: 533.4px;" /></a>
+<p class="caption"><span class="caption-text">Полученное изображение распределения вертикальной составляющей скорости в продольном сечении</span></p>
+</div>
 </div>
 </div>
 </div>
@@ -325,14 +396,18 @@ pandas.DataFrame, список которых содержится в поле f
 <li><a class="reference internal" href="#id1">Создание новых переменных</a></li>
 <li><a class="reference internal" href="#id2">Извлечение данных по полилинии</a></li>
 <li><a class="reference internal" href="#id3">Загрузка извлеченных данных из текстовых файлов</a></li>
-<li><a class="reference internal" href="#lay">Создание изображений срезов и парсинг .lay файлов</a></li>
+<li><a class="reference internal" href="#lay">Создание изображений срезов и парсинг .lay файлов</a><ul>
+<li><a class="reference internal" href="#advanced-way">Advanced way</a></li>
+<li><a class="reference internal" href="#simple-way">Simple way</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 
   <h4>Предыдущий раздел</h4>
-  <p class="topless"><a href="introduction.html"
-                        title="предыдущая глава">Introduction</a></p>
+  <p class="topless"><a href="Changes in current version.html"
+                        title="предыдущая глава">&lt;no title&gt;</a></p>
   <h4>Следующий раздел</h4>
   <p class="topless"><a href="API reference.html"
                         title="следующая глава">API reference</a></p>
@@ -370,7 +445,7 @@ pandas.DataFrame, список которых содержится в поле f
           <a href="API reference.html" title="API reference"
              >вперёд</a> |</li>
         <li class="right" >
-          <a href="introduction.html" title="Introduction"
+          <a href="Changes in current version.html" title="&lt;no title&gt;"
              >назад</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">Документация tecplot_lib </a> &#187;</li> 
       </ul>

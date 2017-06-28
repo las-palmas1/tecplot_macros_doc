@@ -64,7 +64,7 @@ if __name__ == '__main__':
     picture_creator1 = tecplot_lib.PictureCreator(sourcefile_name,
                                                   macro_name, slice_settings,
                                                   level_settings1, legend_settings, colormap_settings1, axis_settings,
-                                                  ticks_settings, export_settings1, frame_settings)
+                                                  export_settings1, frame_settings, ticks_settings)
     # создание макроса и его запись в него команд для создания изображения
     picture_creator1.add_to_existing_macro()
 
@@ -79,10 +79,10 @@ if __name__ == '__main__':
     picture_creator2 = tecplot_lib.PictureCreator(sourcefile_name,
                                                   macro_name, slice_settings,
                                                   level_settings2, legend_settings, colormap_settings2, axis_settings,
-                                                  ticks_settings, export_settings2, frame_settings)
+                                                  export_settings2, frame_settings, ticks_settings)
     # добавление команд для создания второго изображения в уже существующий файл макроса
     picture_creator2.add_to_existing_macro()
     # запуск макроса
     picture_creator2.run_creation()
 
-    # в результате запуска скрипта в папке images появится файл U_long.png
+    # в результате запуска скрипта в папке images появится файлы U_long.png и W_long.png

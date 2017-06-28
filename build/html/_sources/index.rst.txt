@@ -11,6 +11,7 @@ Welcome to tecplot_lib's documentation!
    :caption: Contents:
 
    introduction
+   Changes in current version
    examples
    API reference
 
